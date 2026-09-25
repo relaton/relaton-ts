@@ -8,6 +8,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/tools/Gemfile
     steps:
       - uses: actions/checkout@v4
 
@@ -15,7 +17,6 @@ jobs:
         with:
           ruby-version: "3.4"
           bundler-cache: true
-          working-directory: tools
 
       - uses: actions/setup-node@v4
         with:

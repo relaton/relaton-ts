@@ -105,7 +105,8 @@ end
 manifest = {
   source: "relaton/relaton",
   ref: source_ref,
-  generated: Time.now.utc.iso8601,
+  # No generation timestamp: the manifest must be byte-stable across runs,
+  # so CI can verify the committed artifact by regenerating it.
   lutaml_model_version: Lutaml::Model::VERSION,
   roots: ROOTS.keys.map { |f| "schema/#{f}" },
 }
