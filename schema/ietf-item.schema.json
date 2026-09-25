@@ -447,7 +447,16 @@
             "null"
           ]
         }
-      }
+      },
+      "x-choice-exclusive-groups": [
+        [
+          "from",
+          "to"
+        ],
+        [
+          "at"
+        ]
+      ]
     },
     "Relaton_Bib_Contributor": {
       "type": "object",
@@ -466,29 +475,13 @@
           "$ref": "#/$defs/Relaton_Bib_Organization"
         }
       },
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "person": {
-              "$ref": "#/$defs/Relaton_Bib_Person"
-            }
-          },
-          "required": [
-            "person"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "organization": {
-              "$ref": "#/$defs/Relaton_Bib_Organization"
-            }
-          },
-          "required": [
-            "organization"
-          ]
-        }
+      "x-choice-exclusive-groups": [
+        [
+          "person"
+        ],
+        [
+          "organization"
+        ]
       ]
     },
     "Relaton_Bib_Contributor_Role": {
@@ -1325,29 +1318,13 @@
           "$ref": "#/$defs/Relaton_Bib_Organization"
         }
       },
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "person": {
-              "$ref": "#/$defs/Relaton_Bib_Person"
-            }
-          },
-          "required": [
-            "person"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "organization": {
-              "$ref": "#/$defs/Relaton_Bib_Organization"
-            }
-          },
-          "required": [
-            "organization"
-          ]
-        }
+      "x-choice-exclusive-groups": [
+        [
+          "person"
+        ],
+        [
+          "organization"
+        ]
       ]
     },
     "Relaton_Ietf_Relation": {
@@ -1453,7 +1430,17 @@
             "$ref": "#/$defs/Relaton_Bib_SourceLocalityStack"
           }
         }
-      }
+      },
+      "x-choice-exclusive-groups": [
+        [
+          "locality",
+          "locality_stack"
+        ],
+        [
+          "source_locality",
+          "source_locality_stack"
+        ]
+      ]
     },
     "Relaton_Ietf_ItemBase": {
       "type": "object",
@@ -1766,7 +1753,17 @@
             "$ref": "#/$defs/Relaton_Bib_SourceLocalityStack"
           }
         }
-      }
+      },
+      "x-choice-exclusive-groups": [
+        [
+          "locality",
+          "locality_stack"
+        ],
+        [
+          "source_locality",
+          "source_locality_stack"
+        ]
+      ]
     },
     "Relaton_Bib_ItemBase": {
       "type": "object",
@@ -2178,35 +2175,13 @@
           }
         }
       },
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "locality": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Relaton_Bib_Locality"
-              }
-            }
-          },
-          "required": [
-            "locality"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "locality_stack": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Relaton_Bib_LocalityStack"
-              }
-            }
-          },
-          "required": [
-            "locality_stack"
-          ]
-        }
+      "x-choice-exclusive-groups": [
+        [
+          "locality"
+        ],
+        [
+          "locality_stack"
+        ]
       ]
     },
     "Relaton_Bib_Locality": {

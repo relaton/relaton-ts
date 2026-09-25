@@ -27,17 +27,48 @@ source_ref = File.read(File.join(__dir__, "Gemfile"))
                  .match(/ref:\s*"([0-9a-f]{40})"/)&.[](1) or raise "no ref pin in tools/Gemfile"
 
 # choice_fragment: a bare {properties:, required:} object for one member —
-# the branch shape 0.8.61 renders for every choice member (nested choices
-# nest further anyOf wrappers around fragments).
+# the branch shape 0.8.61 renders for every choice member.
 CHOICE_FRAGMENT = lambda do |b|
   b.is_a?(Hash) && b["type"] == "object" && b["properties"].is_a?(Hash) &&
     b["required"].is_a?(Array) && !b.key?("additionalProperties")
 end
-CHOICE_BRANCH = lambda do |b|
-  CHOICE_FRAGMENT.call(b) ||
-    %w[anyOf allOf oneOf].any? do |k|
-      b.is_a?(Hash) && b[k].is_a?(Array) && b[k].all? { |s| CHOICE_FRAGMENT.call(s) }
+
+# Member property names of one rendered choice group: 0.8.60 renders a whole
+# group as one {properties:} branch, 0.8.61 renders each member as a fragment
+# ({properties:, required:}) and nests wrappers around fragments.
+choice_group_members = lambda do |group|
+  return group["properties"].keys if group.is_a?(Hash) && group["properties"].is_a?(Hash)
+
+  return [] unless group.is_a?(Hash)
+
+  %w[anyOf allOf oneOf].flat_map do |k|
+    next [] unless group[k].is_a?(Array)
+
+    group[k].flat_map { |f| choice_group_members.call(f) }.uniq
+  end
+end
+
+# The rendering shapes, per lutaml-model version, each yielding the list of
+# choice groups (a group = one `choice do ... end` block's members):
+#   0.8.60: def-level oneOf, each branch a whole group
+#   0.8.61: def-level allOf of oneOf, each oneOf a group of fragments
+#   0.8.61 nested (Date): def-level anyOf of fragments and/or nested wrappers
+CHOICE_GROUPS = lambda do |d|
+  if d["oneOf"].is_a?(Array)
+    members = d["oneOf"].map { |b| choice_group_members.call(b) }
+    return members unless members.any?(&:empty?)
+  end
+  if d["allOf"].is_a?(Array) && d["allOf"].all? { |b| b.is_a?(Hash) && b["oneOf"].is_a?(Array) }
+    members = d["allOf"].map do |b|
+      b["oneOf"].flat_map { |f| choice_group_members.call(f) }.uniq
     end
+    return members unless members.any?(&:empty?)
+  end
+  if d["anyOf"].is_a?(Array)
+    members = d["anyOf"].map { |b| choice_group_members.call(b) }
+    return members unless members.any?(&:empty?)
+  end
+  nil
 end
 
 def export_schema(klass)
@@ -46,16 +77,15 @@ def export_schema(klass)
   schema["$defs"].each_value do |d|
     next unless d.is_a?(Hash)
 
-    # 0.8.60: def-level oneOf with no `required` in any branch.
-    if d["oneOf"].is_a?(Array) && d["oneOf"].all? { |b| !b.is_a?(Hash) || !b["required"] }
+    groups = CHOICE_GROUPS.call(d)
+    if groups
+      # The emitters do not honour choice min-presence (relations serialize
+      # with no locality keys at all — lutaml/lutaml-model#869), so presence
+      # is not enforceable. Exclusivity — at most one group present — is
+      # honoured by the corpus, and is enforced downstream in relaton-ts.
+      d["x-choice-exclusive-groups"] = groups
       d.delete("oneOf")
-    end
-    # 0.8.61: allOf of required-discriminated oneOf.
-    if d["allOf"].is_a?(Array) && d["allOf"].all? { |b| b.is_a?(Hash) && b["oneOf"].is_a?(Array) }
       d.delete("allOf")
-    end
-    # 0.8.61 nested choices (Date): anyOf of fragments or fragment-wrappers.
-    if d["anyOf"].is_a?(Array) && d["anyOf"].all? { |b| CHOICE_BRANCH.call(b) }
       d.delete("anyOf")
     end
   end

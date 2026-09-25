@@ -172,7 +172,20 @@ export const BibDate: z.ZodType<BibDate> = z.lazy(() =>
     "from": z.string().nullable().optional(),
     "to": z.string().nullable().optional(),
     "at": z.string().nullable().optional()
-  }).strict());
+  }).strict().superRefine((doc, ctx) => {
+  const groups: string[][] = [["from","to"],["at"]];
+  const d = doc as Record<string, unknown>;
+  const present = (k: string) => {
+    const v = d[k];
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object") return Object.keys(v).length > 0;
+    return true;
+  };
+  if (groups.filter((g) => g.some(present)).length > 1) {
+    ctx.addIssue({ code: "custom", message: "at most one choice group may be present" });
+  }
+}));
 
 export type BibContributor = {
   "role"?: BibContributorRole[];
@@ -185,7 +198,20 @@ export const BibContributor: z.ZodType<BibContributor> = z.lazy(() =>
     "role": z.array(z.lazy(() => BibContributorRole)).optional(),
     "person": z.lazy(() => BibPerson).optional(),
     "organization": z.lazy(() => BibOrganization).optional()
-  }).strict());
+  }).strict().superRefine((doc, ctx) => {
+  const groups: string[][] = [["person"],["organization"]];
+  const d = doc as Record<string, unknown>;
+  const present = (k: string) => {
+    const v = d[k];
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object") return Object.keys(v).length > 0;
+    return true;
+  };
+  if (groups.filter((g) => g.some(present)).length > 1) {
+    ctx.addIssue({ code: "custom", message: "at most one choice group may be present" });
+  }
+}));
 
 export type BibContributorRole = {
   "type"?: "author" | "performer" | "publisher" | "editor" | "adapter" | "translator" | "distributor" | "reazer" | "owner" | "authorizer" | "enabler" | "subject" | null;
@@ -600,7 +626,20 @@ export const BibContributionInfo: z.ZodType<BibContributionInfo> = z.lazy(() =>
   z.object({
     "person": z.lazy(() => BibPerson).optional(),
     "organization": z.lazy(() => BibOrganization).optional()
-  }).strict());
+  }).strict().superRefine((doc, ctx) => {
+  const groups: string[][] = [["person"],["organization"]];
+  const d = doc as Record<string, unknown>;
+  const present = (k: string) => {
+    const v = d[k];
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object") return Object.keys(v).length > 0;
+    return true;
+  };
+  if (groups.filter((g) => g.some(present)).length > 1) {
+    ctx.addIssue({ code: "custom", message: "at most one choice group may be present" });
+  }
+}));
 
 export type BibRelation = {
   "type"?: "includes" | "includedIn" | "hasPart" | "partOf" | "merges" | "mergedInto" | "splits" | "splitInto" | "instanceOf" | "hasInstance" | "exemplarOf" | "hasExemplar" | "manifestationOf" | "hasManifestation" | "reproductionOf" | "hasReproduction" | "reprintOf" | "hasReprint" | "expressionOf" | "hasExpression" | "translatedFrom" | "hasTranslation" | "arrangementOf" | "hasArrangement" | "abridgementOf" | "hasAbridgement" | "annotationOf" | "hasAnnotation" | "draftOf" | "hasDraft" | "predecessorDraftOf" | "hasPredecessorDraft" | "successorDraftOf" | "hasSuccessorDraft" | "editionOf" | "hasEdition" | "updates" | "updatedBy" | "derivedFrom" | "derives" | "describes" | "describedBy" | "catalogues" | "cataloguedBy" | "hasSuccessor" | "successorOf" | "adaptedFrom" | "hasAdaptation" | "adoptedFrom" | "adoptedAs" | "reviewOf" | "hasReview" | "commentaryOf" | "hasCommentary" | "related" | "hasComplement" | "complementOf" | "obsoletes" | "obsoletedBy" | "cites" | "isCitedIn" | null;
@@ -621,7 +660,20 @@ export const BibRelation: z.ZodType<BibRelation> = z.lazy(() =>
     "locality_stack": z.array(z.lazy(() => BibLocalityStack)).optional(),
     "source_locality": z.array(z.lazy(() => BibLocality)).optional(),
     "source_locality_stack": z.array(z.lazy(() => BibSourceLocalityStack)).optional()
-  }).strict());
+  }).strict().superRefine((doc, ctx) => {
+  const groups: string[][] = [["locality","locality_stack"],["source_locality","source_locality_stack"]];
+  const d = doc as Record<string, unknown>;
+  const present = (k: string) => {
+    const v = d[k];
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object") return Object.keys(v).length > 0;
+    return true;
+  };
+  if (groups.filter((g) => g.some(present)).length > 1) {
+    ctx.addIssue({ code: "custom", message: "at most one choice group may be present" });
+  }
+}));
 
 export type BibItemBase = {
   "type"?: "article" | "book" | "booklet" | "manual" | "proceedings" | "presentation" | "thesis" | "techreport" | "standard" | "unpublished" | "map" | "electronic resource" | "audiovisual" | "film" | "video" | "boradcast" | "software" | "graphic_work" | "music" | "patent" | "inbook" | "incollection" | "inproceedings" | "journal" | "website" | "webresource" | "dataset" | "archival" | "social_media" | "alert" | "message" | "convesation" | "misc" | null;
@@ -788,7 +840,20 @@ export const BibExtent: z.ZodType<BibExtent> = z.lazy(() =>
   z.object({
     "locality": z.array(z.lazy(() => BibLocality)).optional(),
     "locality_stack": z.array(z.lazy(() => BibLocalityStack)).optional()
-  }).strict());
+  }).strict().superRefine((doc, ctx) => {
+  const groups: string[][] = [["locality"],["locality_stack"]];
+  const d = doc as Record<string, unknown>;
+  const present = (k: string) => {
+    const v = d[k];
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object") return Object.keys(v).length > 0;
+    return true;
+  };
+  if (groups.filter((g) => g.some(present)).length > 1) {
+    ctx.addIssue({ code: "custom", message: "at most one choice group may be present" });
+  }
+}));
 
 export type BibLocality = {
   "type"?: string | null;

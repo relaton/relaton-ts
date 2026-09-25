@@ -23,8 +23,11 @@ type JsonSchemaNode = {
   additionalProperties?: boolean | JsonSchemaNode;
   items?: JsonSchemaNode;
   anyOf?: JsonSchemaNode[];
+  allOf?: JsonSchemaNode[];
+  oneOf?: JsonSchemaNode[];
   required?: string[];
   format?: string;
+  "x-choice-exclusive-groups"?: string[][];
 };
 
 function defName(defKey: string): string {
@@ -127,6 +130,36 @@ function genType(node: JsonSchemaNode, defs: Record<string, JsonSchemaNode>): st
   return nullable ? `${out} | null` : out;
 }
 
+/**
+ * Choice groups arrive annotated (x-choice-exclusive-groups) rather than as
+ * oneOf/allOf/anyOf wrappers, because the emitters do not honor choice
+ * presence (lutaml/lutaml-model#869) — but they do honor exclusivity. At
+ * most one group of members may be present; an empty array or object member
+ * counts as absent.
+ */
+function refinement(def: JsonSchemaNode): string {
+  const groups = def["x-choice-exclusive-groups"];
+  if (!Array.isArray(groups) || !def.properties) return "";
+  const applicable = groups.filter((g) => g.every((k) => k in def.properties!));
+  if (applicable.length < 2) return "";
+  return [
+    ".superRefine((doc, ctx) => {",
+    `  const groups: string[][] = ${JSON.stringify(applicable)};`,
+    "  const d = doc as Record<string, unknown>;",
+    "  const present = (k: string) => {",
+    "    const v = d[k];",
+    "    if (v == null) return false;",
+    "    if (Array.isArray(v)) return v.length > 0;",
+    "    if (typeof v === \"object\") return Object.keys(v).length > 0;",
+    "    return true;",
+    "  };",
+    "  if (groups.filter((g) => g.some(present)).length > 1) {",
+    "    ctx.addIssue({ code: \"custom\", message: \"at most one choice group may be present\" });",
+    "  }",
+    "})",
+  ].join("\n");
+}
+
 function genModule(schemaPath: string): { module: string; rootName: string } {
   const schema = JSON.parse(
     readFileSync(schemaPath, "utf8"),
@@ -136,8 +169,8 @@ function genModule(schemaPath: string): { module: string; rootName: string } {
   const rootName = refName(schema.$ref);
 
   // The recursive-zod pattern with structural types: aliases may reference
-  // themselves and union (choice/anyOf shapes render as unions), while the
-  // zod values are lazy and annotated with the alias — no const/alias
+  // themselves and union (polymorphic anyOf shapes render as unions), while
+  // the zod values are lazy and annotated with the alias — no const/alias
   // circularity.
   const entries = Object.entries(defs).map(([key, def]) => {
     const name = defName(key);
@@ -145,7 +178,7 @@ function genModule(schemaPath: string): { module: string; rootName: string } {
       `export type ${name} = ${genType(def, defs)};`,
       ``,
       `export const ${name}: z.ZodType<${name}> = z.lazy(() =>`,
-      `  ${genNode(def, defs, "  ")});`,
+      `  ${genNode(def, defs, "  ")}${refinement(def)});`,
     ].join("\n");
   });
 

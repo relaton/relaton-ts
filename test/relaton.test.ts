@@ -108,3 +108,62 @@ describe("validation", () => {
     }
   });
 });
+
+describe("choice exclusivity", () => {
+  // The emitters do not honor choice presence (lutaml/lutaml-model#869),
+  // so absent members are fine — but two groups at once is invalid.
+  it("accepts a date with no choice member and a type", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      date: [{ type: "published" }],
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects a date with at together with from", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      date: [{ type: "published", at: "1969-04", from: "1969-04" }],
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(JSON.stringify(result.errors)).toMatch(/choice group/);
+    }
+  });
+
+  it("accepts from together with to (one group, max 2)", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      date: [{ from: "1969-04", to: "1969-05" }],
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects a relation carrying locality and locality_stack", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      relation: [
+        {
+          type: "includes",
+          bibitem: { formattedref: { content: "RFC 2", format: "text/plain" } },
+          locality: [{ content: "section" }],
+          locality_stack: [{ content: "section" }],
+        },
+      ],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("accepts a relation with neither choice group present", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      relation: [
+        {
+          type: "includes",
+          bibitem: { formattedref: { content: "RFC 2", format: "text/plain" } },
+        },
+      ],
+    });
+    expect(result.ok).toBe(true);
+  });
+});
