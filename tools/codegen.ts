@@ -135,13 +135,14 @@ function genModule(schemaPath: string): { module: string; rootName: string } {
   if (!schema.$ref) throw new Error(`${schemaPath} has no root $ref`);
   const rootName = refName(schema.$ref);
 
-  // The recursive-zod pattern with structural interfaces: interfaces may
-  // reference each other (and themselves) freely, while the zod values are
-  // lazy and annotated with the interface — so no const/alias circularity.
+  // The recursive-zod pattern with structural types: aliases may reference
+  // themselves and union (choice/anyOf shapes render as unions), while the
+  // zod values are lazy and annotated with the alias — no const/alias
+  // circularity.
   const entries = Object.entries(defs).map(([key, def]) => {
     const name = defName(key);
     return [
-      `export interface ${name} ${genType(def, defs)}`,
+      `export type ${name} = ${genType(def, defs)};`,
       ``,
       `export const ${name}: z.ZodType<${name}> = z.lazy(() =>`,
       `  ${genNode(def, defs, "  ")});`,

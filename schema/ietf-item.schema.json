@@ -465,7 +465,31 @@
         "organization": {
           "$ref": "#/$defs/Relaton_Bib_Organization"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "person": {
+              "$ref": "#/$defs/Relaton_Bib_Person"
+            }
+          },
+          "required": [
+            "person"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "organization": {
+              "$ref": "#/$defs/Relaton_Bib_Organization"
+            }
+          },
+          "required": [
+            "organization"
+          ]
+        }
+      ]
     },
     "Relaton_Bib_Contributor_Role": {
       "type": "object",
@@ -1300,7 +1324,31 @@
         "organization": {
           "$ref": "#/$defs/Relaton_Bib_Organization"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "person": {
+              "$ref": "#/$defs/Relaton_Bib_Person"
+            }
+          },
+          "required": [
+            "person"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "organization": {
+              "$ref": "#/$defs/Relaton_Bib_Organization"
+            }
+          },
+          "required": [
+            "organization"
+          ]
+        }
+      ]
     },
     "Relaton_Ietf_Relation": {
       "type": "object",
@@ -2129,7 +2177,37 @@
             "$ref": "#/$defs/Relaton_Bib_LocalityStack"
           }
         }
-      }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "locality": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Relaton_Bib_Locality"
+              }
+            }
+          },
+          "required": [
+            "locality"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "locality_stack": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Relaton_Bib_LocalityStack"
+              }
+            }
+          },
+          "required": [
+            "locality_stack"
+          ]
+        }
+      ]
     },
     "Relaton_Bib_Locality": {
       "type": "object",

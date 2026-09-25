@@ -8,7 +8,7 @@ import { z } from "zod";
 
 
 
-export interface IetfItem {
+export type IetfItem = {
   "id"?: string | null;
   "schema_version"?: string | null;
   "fetched"?: string | null;
@@ -43,7 +43,7 @@ export interface IetfItem {
   "validity"?: BibValidity;
   "depiction"?: BibDepiction[];
   "ext"?: IetfExt;
-}
+};
 
 export const IetfItem: z.ZodType<IetfItem> = z.lazy(() =>
   z.object({
@@ -83,13 +83,13 @@ export const IetfItem: z.ZodType<IetfItem> = z.lazy(() =>
     "ext": z.lazy(() => IetfExt).optional()
   }).strict());
 
-export interface BibFormattedref {
+export type BibFormattedref = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "format"?: string | null;
-}
+};
 
 export const BibFormattedref: z.ZodType<BibFormattedref> = z.lazy(() =>
   z.object({
@@ -100,14 +100,14 @@ export const BibFormattedref: z.ZodType<BibFormattedref> = z.lazy(() =>
     "format": z.string().nullable().optional()
   }).strict());
 
-export interface BibTitle {
+export type BibTitle = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "type"?: string | null;
   "format"?: string | null;
-}
+};
 
 export const BibTitle: z.ZodType<BibTitle> = z.lazy(() =>
   z.object({
@@ -119,13 +119,13 @@ export const BibTitle: z.ZodType<BibTitle> = z.lazy(() =>
     "format": z.string().nullable().optional()
   }).strict());
 
-export interface BibUri {
+export type BibUri = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "type"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibUri: z.ZodType<BibUri> = z.lazy(() =>
   z.object({
@@ -136,7 +136,7 @@ export const BibUri: z.ZodType<BibUri> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibDocidentifier {
+export type BibDocidentifier = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
@@ -144,7 +144,7 @@ export interface BibDocidentifier {
   "type"?: string | null;
   "scope"?: string | null;
   "primary"?: boolean | null;
-}
+};
 
 export const BibDocidentifier: z.ZodType<BibDocidentifier> = z.lazy(() =>
   z.object({
@@ -157,13 +157,13 @@ export const BibDocidentifier: z.ZodType<BibDocidentifier> = z.lazy(() =>
     "primary": z.boolean().nullable().optional()
   }).strict());
 
-export interface BibDate {
+export type BibDate = {
   "type"?: "published" | "accessed" | "created" | "implemented" | "obsoleted" | "confirmed" | "updated" | "corrected" | "issued" | "transmitted" | "copied" | "unchanged" | "circulated" | "adapted" | "vote-started" | "vote-ended" | "announced" | "stable-until" | null;
   "text"?: string | null;
   "from"?: string | null;
   "to"?: string | null;
   "at"?: string | null;
-}
+};
 
 export const BibDate: z.ZodType<BibDate> = z.lazy(() =>
   z.object({
@@ -174,11 +174,11 @@ export const BibDate: z.ZodType<BibDate> = z.lazy(() =>
     "at": z.string().nullable().optional()
   }).strict());
 
-export interface BibContributor {
+export type BibContributor = {
   "role"?: BibContributorRole[];
   "person"?: BibPerson;
   "organization"?: BibOrganization;
-}
+};
 
 export const BibContributor: z.ZodType<BibContributor> = z.lazy(() =>
   z.object({
@@ -187,10 +187,10 @@ export const BibContributor: z.ZodType<BibContributor> = z.lazy(() =>
     "organization": z.lazy(() => BibOrganization).optional()
   }).strict());
 
-export interface BibContributorRole {
+export type BibContributorRole = {
   "type"?: "author" | "performer" | "publisher" | "editor" | "adapter" | "translator" | "distributor" | "reazer" | "owner" | "authorizer" | "enabler" | "subject" | null;
   "description"?: BibLocalizedMarkedUpString[];
-}
+};
 
 export const BibContributorRole: z.ZodType<BibContributorRole> = z.lazy(() =>
   z.object({
@@ -198,12 +198,12 @@ export const BibContributorRole: z.ZodType<BibContributorRole> = z.lazy(() =>
     "description": z.array(z.lazy(() => BibLocalizedMarkedUpString)).optional()
   }).strict());
 
-export interface BibLocalizedMarkedUpString {
+export type BibLocalizedMarkedUpString = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibLocalizedMarkedUpString: z.ZodType<BibLocalizedMarkedUpString> = z.lazy(() =>
   z.object({
@@ -213,7 +213,7 @@ export const BibLocalizedMarkedUpString: z.ZodType<BibLocalizedMarkedUpString> =
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibPerson {
+export type BibPerson = {
   "address"?: BibAddress[];
   "phone"?: BibPhone[];
   "email"?: string[];
@@ -222,7 +222,7 @@ export interface BibPerson {
   "credential"?: string[];
   "affiliation"?: BibAffiliation[];
   "identifier"?: BibPersonIdentifier[];
-}
+};
 
 export const BibPerson: z.ZodType<BibPerson> = z.lazy(() =>
   z.object({
@@ -236,14 +236,14 @@ export const BibPerson: z.ZodType<BibPerson> = z.lazy(() =>
     "identifier": z.array(z.lazy(() => BibPersonIdentifier)).optional()
   }).strict());
 
-export interface BibAddress {
+export type BibAddress = {
   "street"?: string[];
   "city"?: string | null;
   "state"?: string | null;
   "country"?: string | null;
   "postcode"?: string | null;
   "formatted_address"?: string | null;
-}
+};
 
 export const BibAddress: z.ZodType<BibAddress> = z.lazy(() =>
   z.object({
@@ -255,10 +255,10 @@ export const BibAddress: z.ZodType<BibAddress> = z.lazy(() =>
     "formatted_address": z.string().nullable().optional()
   }).strict());
 
-export interface BibPhone {
+export type BibPhone = {
   "type"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibPhone: z.ZodType<BibPhone> = z.lazy(() =>
   z.object({
@@ -266,7 +266,7 @@ export const BibPhone: z.ZodType<BibPhone> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibFullName {
+export type BibFullName = {
   "abbreviation"?: BibLocalizedString;
   "prefix"?: BibLocalizedString[];
   "forename"?: BibFullNameTypeForename[];
@@ -276,7 +276,7 @@ export interface BibFullName {
   "completename"?: BibLocalizedString;
   "note"?: BibNote[];
   "variant"?: BibFullNameTypeVariant[];
-}
+};
 
 export const BibFullName: z.ZodType<BibFullName> = z.lazy(() =>
   z.object({
@@ -291,12 +291,12 @@ export const BibFullName: z.ZodType<BibFullName> = z.lazy(() =>
     "variant": z.array(z.lazy(() => BibFullNameTypeVariant)).optional()
   }).strict());
 
-export interface BibLocalizedString {
+export type BibLocalizedString = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibLocalizedString: z.ZodType<BibLocalizedString> = z.lazy(() =>
   z.object({
@@ -306,13 +306,13 @@ export const BibLocalizedString: z.ZodType<BibLocalizedString> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibFullNameTypeForename {
+export type BibFullNameTypeForename = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "initial"?: string | null;
-}
+};
 
 export const BibFullNameTypeForename: z.ZodType<BibFullNameTypeForename> = z.lazy(() =>
   z.object({
@@ -323,13 +323,13 @@ export const BibFullNameTypeForename: z.ZodType<BibFullNameTypeForename> = z.laz
     "initial": z.string().nullable().optional()
   }).strict());
 
-export interface BibNote {
+export type BibNote = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "type"?: string | null;
-}
+};
 
 export const BibNote: z.ZodType<BibNote> = z.lazy(() =>
   z.object({
@@ -340,7 +340,7 @@ export const BibNote: z.ZodType<BibNote> = z.lazy(() =>
     "type": z.string().nullable().optional()
   }).strict());
 
-export interface BibFullNameTypeVariant {
+export type BibFullNameTypeVariant = {
   "abbreviation"?: BibLocalizedString;
   "prefix"?: BibLocalizedString[];
   "forename"?: BibFullNameTypeForename[];
@@ -351,7 +351,7 @@ export interface BibFullNameTypeVariant {
   "note"?: BibNote[];
   "variant"?: BibFullNameTypeVariant[];
   "type"?: string | null;
-}
+};
 
 export const BibFullNameTypeVariant: z.ZodType<BibFullNameTypeVariant> = z.lazy(() =>
   z.object({
@@ -367,11 +367,11 @@ export const BibFullNameTypeVariant: z.ZodType<BibFullNameTypeVariant> = z.lazy(
     "type": z.string().nullable().optional()
   }).strict());
 
-export interface BibAffiliation {
+export type BibAffiliation = {
   "name"?: BibLocalizedString;
   "description"?: BibLocalizedMarkedUpString[];
   "organization"?: BibOrganization;
-}
+};
 
 export const BibAffiliation: z.ZodType<BibAffiliation> = z.lazy(() =>
   z.object({
@@ -380,7 +380,7 @@ export const BibAffiliation: z.ZodType<BibAffiliation> = z.lazy(() =>
     "organization": z.lazy(() => BibOrganization).optional()
   }).strict());
 
-export interface BibOrganization {
+export type BibOrganization = {
   "address"?: BibAddress[];
   "phone"?: BibPhone[];
   "email"?: string[];
@@ -390,7 +390,7 @@ export interface BibOrganization {
   "abbreviation"?: BibLocalizedString;
   "identifier"?: BibOrganizationTypeIdentifier[];
   "logo"?: BibLogo[];
-}
+};
 
 export const BibOrganization: z.ZodType<BibOrganization> = z.lazy(() =>
   z.object({
@@ -405,13 +405,13 @@ export const BibOrganization: z.ZodType<BibOrganization> = z.lazy(() =>
     "logo": z.array(z.lazy(() => BibLogo)).optional()
   }).strict());
 
-export interface BibTypedLocalizedString {
+export type BibTypedLocalizedString = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "type"?: string | null;
-}
+};
 
 export const BibTypedLocalizedString: z.ZodType<BibTypedLocalizedString> = z.lazy(() =>
   z.object({
@@ -422,7 +422,7 @@ export const BibTypedLocalizedString: z.ZodType<BibTypedLocalizedString> = z.laz
     "type": z.string().nullable().optional()
   }).strict());
 
-export interface BibSubdivision {
+export type BibSubdivision = {
   "address"?: BibAddress[];
   "phone"?: BibPhone[];
   "email"?: string[];
@@ -434,7 +434,7 @@ export interface BibSubdivision {
   "logo"?: BibLogo[];
   "type"?: string | null;
   "subtype"?: string | null;
-}
+};
 
 export const BibSubdivision: z.ZodType<BibSubdivision> = z.lazy(() =>
   z.object({
@@ -451,10 +451,10 @@ export const BibSubdivision: z.ZodType<BibSubdivision> = z.lazy(() =>
     "subtype": z.string().nullable().optional()
   }).strict());
 
-export interface BibOrganizationTypeIdentifier {
+export type BibOrganizationTypeIdentifier = {
   "type"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibOrganizationTypeIdentifier: z.ZodType<BibOrganizationTypeIdentifier> = z.lazy(() =>
   z.object({
@@ -462,10 +462,10 @@ export const BibOrganizationTypeIdentifier: z.ZodType<BibOrganizationTypeIdentif
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibLogo {
+export type BibLogo = {
   "type"?: string | null;
   "image"?: BibImage;
-}
+};
 
 export const BibLogo: z.ZodType<BibLogo> = z.lazy(() =>
   z.object({
@@ -473,7 +473,7 @@ export const BibLogo: z.ZodType<BibLogo> = z.lazy(() =>
     "image": z.lazy(() => BibImage).optional()
   }).strict());
 
-export interface BibImage {
+export type BibImage = {
   "id"?: string | null;
   "src"?: string | null;
   "mimetype"?: string | null;
@@ -483,7 +483,7 @@ export interface BibImage {
   "alt"?: string | null;
   "title"?: string | null;
   "longdesc"?: string | null;
-}
+};
 
 export const BibImage: z.ZodType<BibImage> = z.lazy(() =>
   z.object({
@@ -498,10 +498,10 @@ export const BibImage: z.ZodType<BibImage> = z.lazy(() =>
     "longdesc": z.string().nullable().optional()
   }).strict());
 
-export interface BibPersonIdentifier {
+export type BibPersonIdentifier = {
   "type"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibPersonIdentifier: z.ZodType<BibPersonIdentifier> = z.lazy(() =>
   z.object({
@@ -509,10 +509,10 @@ export const BibPersonIdentifier: z.ZodType<BibPersonIdentifier> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibEdition {
+export type BibEdition = {
   "number"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibEdition: z.ZodType<BibEdition> = z.lazy(() =>
   z.object({
@@ -520,12 +520,12 @@ export const BibEdition: z.ZodType<BibEdition> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibVersion {
+export type BibVersion = {
   "type"?: string | null;
   "content"?: string | null;
   "revision_date"?: string | null;
   "draft"?: string | null;
-}
+};
 
 export const BibVersion: z.ZodType<BibVersion> = z.lazy(() =>
   z.object({
@@ -535,13 +535,13 @@ export const BibVersion: z.ZodType<BibVersion> = z.lazy(() =>
     "draft": z.string().nullable().optional()
   }).strict());
 
-export interface BibAbstract {
+export type BibAbstract = {
   "language"?: string | null;
   "locale"?: string | null;
   "script"?: string | null;
   "content"?: string | null;
   "format"?: string | null;
-}
+};
 
 export const BibAbstract: z.ZodType<BibAbstract> = z.lazy(() =>
   z.object({
@@ -552,11 +552,11 @@ export const BibAbstract: z.ZodType<BibAbstract> = z.lazy(() =>
     "format": z.string().nullable().optional()
   }).strict());
 
-export interface BibStatus {
+export type BibStatus = {
   "stage"?: BibStatusStage;
   "substage"?: BibStatusStage;
   "iteration"?: string | null;
-}
+};
 
 export const BibStatus: z.ZodType<BibStatus> = z.lazy(() =>
   z.object({
@@ -565,10 +565,10 @@ export const BibStatus: z.ZodType<BibStatus> = z.lazy(() =>
     "iteration": z.string().nullable().optional()
   }).strict());
 
-export interface BibStatusStage {
+export type BibStatusStage = {
   "abbreviation"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibStatusStage: z.ZodType<BibStatusStage> = z.lazy(() =>
   z.object({
@@ -576,12 +576,12 @@ export const BibStatusStage: z.ZodType<BibStatusStage> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibCopyright {
+export type BibCopyright = {
   "from"?: string | null;
   "to"?: string | null;
   "owner"?: BibContributionInfo[];
   "scope"?: string | null;
-}
+};
 
 export const BibCopyright: z.ZodType<BibCopyright> = z.lazy(() =>
   z.object({
@@ -591,10 +591,10 @@ export const BibCopyright: z.ZodType<BibCopyright> = z.lazy(() =>
     "scope": z.string().nullable().optional()
   }).strict());
 
-export interface BibContributionInfo {
+export type BibContributionInfo = {
   "person"?: BibPerson;
   "organization"?: BibOrganization;
-}
+};
 
 export const BibContributionInfo: z.ZodType<BibContributionInfo> = z.lazy(() =>
   z.object({
@@ -602,7 +602,7 @@ export const BibContributionInfo: z.ZodType<BibContributionInfo> = z.lazy(() =>
     "organization": z.lazy(() => BibOrganization).optional()
   }).strict());
 
-export interface IetfRelation {
+export type IetfRelation = {
   "type"?: "includes" | "includedIn" | "hasPart" | "partOf" | "merges" | "mergedInto" | "splits" | "splitInto" | "instanceOf" | "hasInstance" | "exemplarOf" | "hasExemplar" | "manifestationOf" | "hasManifestation" | "reproductionOf" | "hasReproduction" | "reprintOf" | "hasReprint" | "expressionOf" | "hasExpression" | "translatedFrom" | "hasTranslation" | "arrangementOf" | "hasArrangement" | "abridgementOf" | "hasAbridgement" | "annotationOf" | "hasAnnotation" | "draftOf" | "hasDraft" | "predecessorDraftOf" | "hasPredecessorDraft" | "successorDraftOf" | "hasSuccessorDraft" | "editionOf" | "hasEdition" | "updates" | "updatedBy" | "derivedFrom" | "derives" | "describes" | "describedBy" | "catalogues" | "cataloguedBy" | "hasSuccessor" | "successorOf" | "adaptedFrom" | "hasAdaptation" | "adoptedFrom" | "adoptedAs" | "reviewOf" | "hasReview" | "commentaryOf" | "hasCommentary" | "related" | "hasComplement" | "complementOf" | "obsoletes" | "obsoletedBy" | "cites" | "isCitedIn" | null;
   "description"?: BibLocalizedMarkedUpString;
   "bibitem"?: IetfItemBase;
@@ -610,7 +610,7 @@ export interface IetfRelation {
   "locality_stack"?: BibLocalityStack[];
   "source_locality"?: BibLocality[];
   "source_locality_stack"?: BibSourceLocalityStack[];
-}
+};
 
 export const IetfRelation: z.ZodType<IetfRelation> = z.lazy(() =>
   z.object({
@@ -623,7 +623,7 @@ export const IetfRelation: z.ZodType<IetfRelation> = z.lazy(() =>
     "source_locality_stack": z.array(z.lazy(() => BibSourceLocalityStack)).optional()
   }).strict());
 
-export interface IetfItemBase {
+export type IetfItemBase = {
   "type"?: "article" | "book" | "booklet" | "manual" | "proceedings" | "presentation" | "thesis" | "techreport" | "standard" | "unpublished" | "map" | "electronic resource" | "audiovisual" | "film" | "video" | "boradcast" | "software" | "graphic_work" | "music" | "patent" | "inbook" | "incollection" | "inproceedings" | "journal" | "website" | "webresource" | "dataset" | "archival" | "social_media" | "alert" | "message" | "convesation" | "misc" | null;
   "formattedref"?: BibFormattedref;
   "title"?: BibTitle[];
@@ -654,7 +654,7 @@ export interface IetfItemBase {
   "keyword"?: BibKeyword[];
   "validity"?: BibValidity;
   "depiction"?: BibDepiction[];
-}
+};
 
 export const IetfItemBase: z.ZodType<IetfItemBase> = z.lazy(() =>
   z.object({
@@ -690,7 +690,7 @@ export const IetfItemBase: z.ZodType<IetfItemBase> = z.lazy(() =>
     "depiction": z.array(z.lazy(() => BibDepiction)).optional()
   }).strict());
 
-export interface BibRelation {
+export type BibRelation = {
   "type"?: "includes" | "includedIn" | "hasPart" | "partOf" | "merges" | "mergedInto" | "splits" | "splitInto" | "instanceOf" | "hasInstance" | "exemplarOf" | "hasExemplar" | "manifestationOf" | "hasManifestation" | "reproductionOf" | "hasReproduction" | "reprintOf" | "hasReprint" | "expressionOf" | "hasExpression" | "translatedFrom" | "hasTranslation" | "arrangementOf" | "hasArrangement" | "abridgementOf" | "hasAbridgement" | "annotationOf" | "hasAnnotation" | "draftOf" | "hasDraft" | "predecessorDraftOf" | "hasPredecessorDraft" | "successorDraftOf" | "hasSuccessorDraft" | "editionOf" | "hasEdition" | "updates" | "updatedBy" | "derivedFrom" | "derives" | "describes" | "describedBy" | "catalogues" | "cataloguedBy" | "hasSuccessor" | "successorOf" | "adaptedFrom" | "hasAdaptation" | "adoptedFrom" | "adoptedAs" | "reviewOf" | "hasReview" | "commentaryOf" | "hasCommentary" | "related" | "hasComplement" | "complementOf" | "obsoletes" | "obsoletedBy" | "cites" | "isCitedIn" | null;
   "description"?: BibLocalizedMarkedUpString;
   "bibitem"?: BibItemBase;
@@ -698,7 +698,7 @@ export interface BibRelation {
   "locality_stack"?: BibLocalityStack[];
   "source_locality"?: BibLocality[];
   "source_locality_stack"?: BibSourceLocalityStack[];
-}
+};
 
 export const BibRelation: z.ZodType<BibRelation> = z.lazy(() =>
   z.object({
@@ -711,7 +711,7 @@ export const BibRelation: z.ZodType<BibRelation> = z.lazy(() =>
     "source_locality_stack": z.array(z.lazy(() => BibSourceLocalityStack)).optional()
   }).strict());
 
-export interface BibItemBase {
+export type BibItemBase = {
   "type"?: "article" | "book" | "booklet" | "manual" | "proceedings" | "presentation" | "thesis" | "techreport" | "standard" | "unpublished" | "map" | "electronic resource" | "audiovisual" | "film" | "video" | "boradcast" | "software" | "graphic_work" | "music" | "patent" | "inbook" | "incollection" | "inproceedings" | "journal" | "website" | "webresource" | "dataset" | "archival" | "social_media" | "alert" | "message" | "convesation" | "misc" | null;
   "formattedref"?: BibFormattedref;
   "title"?: BibTitle[];
@@ -742,7 +742,7 @@ export interface BibItemBase {
   "keyword"?: BibKeyword[];
   "validity"?: BibValidity;
   "depiction"?: BibDepiction[];
-}
+};
 
 export const BibItemBase: z.ZodType<BibItemBase> = z.lazy(() =>
   z.object({
@@ -778,7 +778,7 @@ export const BibItemBase: z.ZodType<BibItemBase> = z.lazy(() =>
     "depiction": z.array(z.lazy(() => BibDepiction)).optional()
   }).strict());
 
-export interface BibSeries {
+export type BibSeries = {
   "type"?: "main" | "alt" | null;
   "formattedref"?: BibFormattedref;
   "title"?: BibTitle[];
@@ -790,7 +790,7 @@ export interface BibSeries {
   "number"?: string | null;
   "partnumber"?: string | null;
   "run"?: string | null;
-}
+};
 
 export const BibSeries: z.ZodType<BibSeries> = z.lazy(() =>
   z.object({
@@ -807,13 +807,13 @@ export const BibSeries: z.ZodType<BibSeries> = z.lazy(() =>
     "run": z.string().nullable().optional()
   }).strict());
 
-export interface BibPlace {
+export type BibPlace = {
   "city"?: string | null;
   "region"?: BibPlaceRegionType[];
   "country"?: BibPlaceRegionType[];
   "formatted_place"?: string | null;
   "uri"?: BibUri;
-}
+};
 
 export const BibPlace: z.ZodType<BibPlace> = z.lazy(() =>
   z.object({
@@ -824,11 +824,11 @@ export const BibPlace: z.ZodType<BibPlace> = z.lazy(() =>
     "uri": z.lazy(() => BibUri).optional()
   }).strict());
 
-export interface BibPlaceRegionType {
+export type BibPlaceRegionType = {
   "iso"?: string | null;
   "recommended"?: boolean | null;
   "content"?: string | null;
-}
+};
 
 export const BibPlaceRegionType: z.ZodType<BibPlaceRegionType> = z.lazy(() =>
   z.object({
@@ -837,14 +837,14 @@ export const BibPlaceRegionType: z.ZodType<BibPlaceRegionType> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibMedium {
+export type BibMedium = {
   "content"?: string | null;
   "genre"?: string | null;
   "form"?: string | null;
   "carrier"?: string | null;
   "size"?: string | null;
   "scale"?: string | null;
-}
+};
 
 export const BibMedium: z.ZodType<BibMedium> = z.lazy(() =>
   z.object({
@@ -856,10 +856,10 @@ export const BibMedium: z.ZodType<BibMedium> = z.lazy(() =>
     "scale": z.string().nullable().optional()
   }).strict());
 
-export interface BibPrice {
+export type BibPrice = {
   "currency"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibPrice: z.ZodType<BibPrice> = z.lazy(() =>
   z.object({
@@ -867,10 +867,10 @@ export const BibPrice: z.ZodType<BibPrice> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibExtent {
+export type BibExtent = {
   "locality"?: BibLocality[];
   "locality_stack"?: BibLocalityStack[];
-}
+};
 
 export const BibExtent: z.ZodType<BibExtent> = z.lazy(() =>
   z.object({
@@ -878,11 +878,11 @@ export const BibExtent: z.ZodType<BibExtent> = z.lazy(() =>
     "locality_stack": z.array(z.lazy(() => BibLocalityStack)).optional()
   }).strict());
 
-export interface BibLocality {
+export type BibLocality = {
   "type"?: string | null;
   "reference_from"?: string | null;
   "reference_to"?: string | null;
-}
+};
 
 export const BibLocality: z.ZodType<BibLocality> = z.lazy(() =>
   z.object({
@@ -891,10 +891,10 @@ export const BibLocality: z.ZodType<BibLocality> = z.lazy(() =>
     "reference_to": z.string().nullable().optional()
   }).strict());
 
-export interface BibLocalityStack {
+export type BibLocalityStack = {
   "connective"?: "and" | "or" | "from" | "to" | null;
   "locality"?: BibLocality[];
-}
+};
 
 export const BibLocalityStack: z.ZodType<BibLocalityStack> = z.lazy(() =>
   z.object({
@@ -902,19 +902,19 @@ export const BibLocalityStack: z.ZodType<BibLocalityStack> = z.lazy(() =>
     "locality": z.array(z.lazy(() => BibLocality)).optional()
   }).strict());
 
-export interface BibSize {
+export type BibSize = {
   "value"?: BibSizeValue[];
-}
+};
 
 export const BibSize: z.ZodType<BibSize> = z.lazy(() =>
   z.object({
     "value": z.array(z.lazy(() => BibSizeValue)).optional()
   }).strict());
 
-export interface BibSizeValue {
+export type BibSizeValue = {
   "type"?: string | null;
   "content"?: string | null;
-}
+};
 
 export const BibSizeValue: z.ZodType<BibSizeValue> = z.lazy(() =>
   z.object({
@@ -922,11 +922,11 @@ export const BibSizeValue: z.ZodType<BibSizeValue> = z.lazy(() =>
     "content": z.string().nullable().optional()
   }).strict());
 
-export interface BibKeyword {
+export type BibKeyword = {
   "vocab"?: BibLocalizedString;
   "taxon"?: BibLocalizedString[];
   "vocabid"?: BibKeywordVocabid[];
-}
+};
 
 export const BibKeyword: z.ZodType<BibKeyword> = z.lazy(() =>
   z.object({
@@ -935,12 +935,12 @@ export const BibKeyword: z.ZodType<BibKeyword> = z.lazy(() =>
     "vocabid": z.array(z.lazy(() => BibKeywordVocabid)).optional()
   }).strict());
 
-export interface BibKeywordVocabid {
+export type BibKeywordVocabid = {
   "type"?: string | null;
   "uri"?: string | null;
   "code"?: string | null;
   "term"?: string | null;
-}
+};
 
 export const BibKeywordVocabid: z.ZodType<BibKeywordVocabid> = z.lazy(() =>
   z.object({
@@ -950,11 +950,11 @@ export const BibKeywordVocabid: z.ZodType<BibKeywordVocabid> = z.lazy(() =>
     "term": z.string().nullable().optional()
   }).strict());
 
-export interface BibValidity {
+export type BibValidity = {
   "begins"?: string | null;
   "ends"?: string | null;
   "revision"?: string | null;
-}
+};
 
 export const BibValidity: z.ZodType<BibValidity> = z.lazy(() =>
   z.object({
@@ -963,11 +963,11 @@ export const BibValidity: z.ZodType<BibValidity> = z.lazy(() =>
     "revision": z.string().nullable().optional()
   }).strict());
 
-export interface BibDepiction {
+export type BibDepiction = {
   "scope"?: string | null;
   "type"?: string | null;
   "image"?: BibImage[];
-}
+};
 
 export const BibDepiction: z.ZodType<BibDepiction> = z.lazy(() =>
   z.object({
@@ -976,10 +976,10 @@ export const BibDepiction: z.ZodType<BibDepiction> = z.lazy(() =>
     "image": z.array(z.lazy(() => BibImage)).optional()
   }).strict());
 
-export interface BibSourceLocalityStack {
+export type BibSourceLocalityStack = {
   "connective"?: "and" | "or" | "from" | "to" | null;
   "source_locality"?: BibLocality[];
-}
+};
 
 export const BibSourceLocalityStack: z.ZodType<BibSourceLocalityStack> = z.lazy(() =>
   z.object({
@@ -987,7 +987,7 @@ export const BibSourceLocalityStack: z.ZodType<BibSourceLocalityStack> = z.lazy(
     "source_locality": z.array(z.lazy(() => BibLocality)).optional()
   }).strict());
 
-export interface IetfExt {
+export type IetfExt = {
   "schema_version"?: string | null;
   "doctype"?: IetfDoctype;
   "subdoctype"?: string | null;
@@ -1006,7 +1006,7 @@ export interface IetfExt {
   "toc_include"?: string | null;
   "toc_depth"?: string | null;
   "show_on_front_page"?: string | null;
-}
+};
 
 export const IetfExt: z.ZodType<IetfExt> = z.lazy(() =>
   z.object({
@@ -1030,11 +1030,11 @@ export const IetfExt: z.ZodType<IetfExt> = z.lazy(() =>
     "show_on_front_page": z.string().nullable().optional()
   }).strict());
 
-export interface IetfDoctype {
+export type IetfDoctype = {
   "abbreviation"?: string | null;
   "content"?: string | null;
   "type"?: "rfc" | "internet-draft" | null;
-}
+};
 
 export const IetfDoctype: z.ZodType<IetfDoctype> = z.lazy(() =>
   z.object({
@@ -1043,10 +1043,10 @@ export const IetfDoctype: z.ZodType<IetfDoctype> = z.lazy(() =>
     "type": z.enum(["rfc", "internet-draft"]).nullable().optional()
   }).strict());
 
-export interface BibICS {
+export type BibICS = {
   "code"?: string | null;
   "text"?: string | null;
-}
+};
 
 export const BibICS: z.ZodType<BibICS> = z.lazy(() =>
   z.object({
@@ -1054,7 +1054,7 @@ export const BibICS: z.ZodType<BibICS> = z.lazy(() =>
     "text": z.string().nullable().optional()
   }).strict());
 
-export interface BibStructuredIdentifier {
+export type BibStructuredIdentifier = {
   "type"?: string | null;
   "agency"?: string[];
   "klass"?: string | null;
@@ -1068,7 +1068,7 @@ export interface BibStructuredIdentifier {
   "corrigendum"?: string | null;
   "language"?: string | null;
   "year"?: string | null;
-}
+};
 
 export const BibStructuredIdentifier: z.ZodType<BibStructuredIdentifier> = z.lazy(() =>
   z.object({
@@ -1087,7 +1087,7 @@ export const BibStructuredIdentifier: z.ZodType<BibStructuredIdentifier> = z.laz
     "year": z.string().nullable().optional()
   }).strict());
 
-export interface IetfProcessingInstructions {
+export type IetfProcessingInstructions = {
   "artworkdelimiter"?: string | null;
   "artworklines"?: string | null;
   "authorship"?: string | null;
@@ -1123,7 +1123,7 @@ export interface IetfProcessingInstructions {
   "tocdepth"?: string | null;
   "symrefs"?: string | null;
   "sortrefs"?: string | null;
-}
+};
 
 export const IetfProcessingInstructions: z.ZodType<IetfProcessingInstructions> = z.lazy(() =>
   z.object({
