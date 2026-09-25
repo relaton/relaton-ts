@@ -1,0 +1,2817 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/Relaton_Ietf_Item",
+  "$defs": {
+    "Relaton_Ietf_Item": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "schema_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fetched": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "article",
+            "book",
+            "booklet",
+            "manual",
+            "proceedings",
+            "presentation",
+            "thesis",
+            "techreport",
+            "standard",
+            "unpublished",
+            "map",
+            "electronic resource",
+            "audiovisual",
+            "film",
+            "video",
+            "boradcast",
+            "software",
+            "graphic_work",
+            "music",
+            "patent",
+            "inbook",
+            "incollection",
+            "inproceedings",
+            "journal",
+            "website",
+            "webresource",
+            "dataset",
+            "archival",
+            "social_media",
+            "alert",
+            "message",
+            "convesation",
+            "misc"
+          ]
+        },
+        "formattedref": {
+          "$ref": "#/$defs/Relaton_Bib_Formattedref"
+        },
+        "title": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Title"
+          }
+        },
+        "source": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "docidentifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "docnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Date"
+          }
+        },
+        "contributor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Contributor"
+          }
+        },
+        "edition": {
+          "$ref": "#/$defs/Relaton_Bib_Edition"
+        },
+        "version": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Version"
+          }
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Note"
+          }
+        },
+        "language": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "locale": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "abstract": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Abstract"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/Relaton_Bib_Status"
+        },
+        "copyright": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Copyright"
+          }
+        },
+        "relation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Ietf_Relation"
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Series"
+          }
+        },
+        "medium": {
+          "$ref": "#/$defs/Relaton_Bib_Medium"
+        },
+        "place": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Place"
+          }
+        },
+        "price": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Price"
+          }
+        },
+        "extent": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Extent"
+          }
+        },
+        "size": {
+          "$ref": "#/$defs/Relaton_Bib_Size"
+        },
+        "accesslocation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "license": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "classification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "keyword": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Keyword"
+          }
+        },
+        "validity": {
+          "$ref": "#/$defs/Relaton_Bib_Validity"
+        },
+        "depiction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Depiction"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Relaton_Ietf_Ext"
+        }
+      }
+    },
+    "Relaton_Bib_Formattedref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "format": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Title": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "format": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Uri": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Docidentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "primary": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Date": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "published",
+            "accessed",
+            "created",
+            "implemented",
+            "obsoleted",
+            "confirmed",
+            "updated",
+            "corrected",
+            "issued",
+            "transmitted",
+            "copied",
+            "unchanged",
+            "circulated",
+            "adapted",
+            "vote-started",
+            "vote-ended",
+            "announced",
+            "stable-until"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Contributor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Contributor_Role"
+          }
+        },
+        "person": {
+          "$ref": "#/$defs/Relaton_Bib_Person"
+        },
+        "organization": {
+          "$ref": "#/$defs/Relaton_Bib_Organization"
+        }
+      }
+    },
+    "Relaton_Bib_Contributor_Role": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "author",
+            "performer",
+            "publisher",
+            "editor",
+            "adapter",
+            "translator",
+            "distributor",
+            "reazer",
+            "owner",
+            "authorizer",
+            "enabler",
+            "subject"
+          ]
+        },
+        "description": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedMarkedUpString"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_LocalizedMarkedUpString": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Person": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Address"
+          }
+        },
+        "phone": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Phone"
+          }
+        },
+        "email": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "uri": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "name": {
+          "$ref": "#/$defs/Relaton_Bib_FullName"
+        },
+        "credential": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "affiliation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Affiliation"
+          }
+        },
+        "identifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Person_Identifier"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "street": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "postcode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "formatted_address": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Phone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_FullName": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abbreviation": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "prefix": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+          }
+        },
+        "forename": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_FullNameType_Forename"
+          }
+        },
+        "formatted_initials": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "surname": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "addition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+          }
+        },
+        "completename": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Note"
+          }
+        },
+        "variant": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_FullNameType_Variant"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_LocalizedString": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_FullNameType_Forename": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "initial": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Note": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_FullNameType_Variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abbreviation": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "prefix": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+          }
+        },
+        "forename": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_FullNameType_Forename"
+          }
+        },
+        "formatted_initials": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "surname": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "addition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+          }
+        },
+        "completename": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Note"
+          }
+        },
+        "variant": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_FullNameType_Variant"
+          }
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Affiliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "description": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedMarkedUpString"
+          }
+        },
+        "organization": {
+          "$ref": "#/$defs/Relaton_Bib_Organization"
+        }
+      }
+    },
+    "Relaton_Bib_Organization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Address"
+          }
+        },
+        "phone": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Phone"
+          }
+        },
+        "email": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "uri": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "name": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_TypedLocalizedString"
+          }
+        },
+        "subdivision": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Subdivision"
+          }
+        },
+        "abbreviation": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "identifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_OrganizationType_Identifier"
+          }
+        },
+        "logo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Logo"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_TypedLocalizedString": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Subdivision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Address"
+          }
+        },
+        "phone": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Phone"
+          }
+        },
+        "email": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "uri": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "name": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_TypedLocalizedString"
+          }
+        },
+        "subdivision": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Subdivision"
+          }
+        },
+        "abbreviation": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "identifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_OrganizationType_Identifier"
+          }
+        },
+        "logo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Logo"
+          }
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subtype": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_OrganizationType_Identifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Logo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "image": {
+          "$ref": "#/$defs/Relaton_Bib_Image"
+        }
+      }
+    },
+    "Relaton_Bib_Image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "src": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mimetype": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "height": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "longdesc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Person_Identifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Edition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Version": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "draft": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Abstract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "script": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "format": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Status": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "$ref": "#/$defs/Relaton_Bib_Status_Stage"
+        },
+        "substage": {
+          "$ref": "#/$defs/Relaton_Bib_Status_Stage"
+        },
+        "iteration": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Status_Stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abbreviation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Copyright": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owner": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_ContributionInfo"
+          }
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_ContributionInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "person": {
+          "$ref": "#/$defs/Relaton_Bib_Person"
+        },
+        "organization": {
+          "$ref": "#/$defs/Relaton_Bib_Organization"
+        }
+      }
+    },
+    "Relaton_Ietf_Relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "includes",
+            "includedIn",
+            "hasPart",
+            "partOf",
+            "merges",
+            "mergedInto",
+            "splits",
+            "splitInto",
+            "instanceOf",
+            "hasInstance",
+            "exemplarOf",
+            "hasExemplar",
+            "manifestationOf",
+            "hasManifestation",
+            "reproductionOf",
+            "hasReproduction",
+            "reprintOf",
+            "hasReprint",
+            "expressionOf",
+            "hasExpression",
+            "translatedFrom",
+            "hasTranslation",
+            "arrangementOf",
+            "hasArrangement",
+            "abridgementOf",
+            "hasAbridgement",
+            "annotationOf",
+            "hasAnnotation",
+            "draftOf",
+            "hasDraft",
+            "predecessorDraftOf",
+            "hasPredecessorDraft",
+            "successorDraftOf",
+            "hasSuccessorDraft",
+            "editionOf",
+            "hasEdition",
+            "updates",
+            "updatedBy",
+            "derivedFrom",
+            "derives",
+            "describes",
+            "describedBy",
+            "catalogues",
+            "cataloguedBy",
+            "hasSuccessor",
+            "successorOf",
+            "adaptedFrom",
+            "hasAdaptation",
+            "adoptedFrom",
+            "adoptedAs",
+            "reviewOf",
+            "hasReview",
+            "commentaryOf",
+            "hasCommentary",
+            "related",
+            "hasComplement",
+            "complementOf",
+            "obsoletes",
+            "obsoletedBy",
+            "cites",
+            "isCitedIn"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedMarkedUpString"
+        },
+        "bibitem": {
+          "$ref": "#/$defs/Relaton_Ietf_ItemBase"
+        },
+        "locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        },
+        "locality_stack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalityStack"
+          }
+        },
+        "source_locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        },
+        "source_locality_stack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_SourceLocalityStack"
+          }
+        }
+      }
+    },
+    "Relaton_Ietf_ItemBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "article",
+            "book",
+            "booklet",
+            "manual",
+            "proceedings",
+            "presentation",
+            "thesis",
+            "techreport",
+            "standard",
+            "unpublished",
+            "map",
+            "electronic resource",
+            "audiovisual",
+            "film",
+            "video",
+            "boradcast",
+            "software",
+            "graphic_work",
+            "music",
+            "patent",
+            "inbook",
+            "incollection",
+            "inproceedings",
+            "journal",
+            "website",
+            "webresource",
+            "dataset",
+            "archival",
+            "social_media",
+            "alert",
+            "message",
+            "convesation",
+            "misc"
+          ]
+        },
+        "formattedref": {
+          "$ref": "#/$defs/Relaton_Bib_Formattedref"
+        },
+        "title": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Title"
+          }
+        },
+        "source": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "docidentifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "docnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Date"
+          }
+        },
+        "contributor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Contributor"
+          }
+        },
+        "edition": {
+          "$ref": "#/$defs/Relaton_Bib_Edition"
+        },
+        "version": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Version"
+          }
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Note"
+          }
+        },
+        "language": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "locale": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "abstract": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Abstract"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/Relaton_Bib_Status"
+        },
+        "copyright": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Copyright"
+          }
+        },
+        "relation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Relation"
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Series"
+          }
+        },
+        "medium": {
+          "$ref": "#/$defs/Relaton_Bib_Medium"
+        },
+        "place": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Place"
+          }
+        },
+        "price": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Price"
+          }
+        },
+        "extent": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Extent"
+          }
+        },
+        "size": {
+          "$ref": "#/$defs/Relaton_Bib_Size"
+        },
+        "accesslocation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "license": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "classification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "keyword": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Keyword"
+          }
+        },
+        "validity": {
+          "$ref": "#/$defs/Relaton_Bib_Validity"
+        },
+        "depiction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Depiction"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "includes",
+            "includedIn",
+            "hasPart",
+            "partOf",
+            "merges",
+            "mergedInto",
+            "splits",
+            "splitInto",
+            "instanceOf",
+            "hasInstance",
+            "exemplarOf",
+            "hasExemplar",
+            "manifestationOf",
+            "hasManifestation",
+            "reproductionOf",
+            "hasReproduction",
+            "reprintOf",
+            "hasReprint",
+            "expressionOf",
+            "hasExpression",
+            "translatedFrom",
+            "hasTranslation",
+            "arrangementOf",
+            "hasArrangement",
+            "abridgementOf",
+            "hasAbridgement",
+            "annotationOf",
+            "hasAnnotation",
+            "draftOf",
+            "hasDraft",
+            "predecessorDraftOf",
+            "hasPredecessorDraft",
+            "successorDraftOf",
+            "hasSuccessorDraft",
+            "editionOf",
+            "hasEdition",
+            "updates",
+            "updatedBy",
+            "derivedFrom",
+            "derives",
+            "describes",
+            "describedBy",
+            "catalogues",
+            "cataloguedBy",
+            "hasSuccessor",
+            "successorOf",
+            "adaptedFrom",
+            "hasAdaptation",
+            "adoptedFrom",
+            "adoptedAs",
+            "reviewOf",
+            "hasReview",
+            "commentaryOf",
+            "hasCommentary",
+            "related",
+            "hasComplement",
+            "complementOf",
+            "obsoletes",
+            "obsoletedBy",
+            "cites",
+            "isCitedIn"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedMarkedUpString"
+        },
+        "bibitem": {
+          "$ref": "#/$defs/Relaton_Bib_ItemBase"
+        },
+        "locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        },
+        "locality_stack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalityStack"
+          }
+        },
+        "source_locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        },
+        "source_locality_stack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_SourceLocalityStack"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_ItemBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "article",
+            "book",
+            "booklet",
+            "manual",
+            "proceedings",
+            "presentation",
+            "thesis",
+            "techreport",
+            "standard",
+            "unpublished",
+            "map",
+            "electronic resource",
+            "audiovisual",
+            "film",
+            "video",
+            "boradcast",
+            "software",
+            "graphic_work",
+            "music",
+            "patent",
+            "inbook",
+            "incollection",
+            "inproceedings",
+            "journal",
+            "website",
+            "webresource",
+            "dataset",
+            "archival",
+            "social_media",
+            "alert",
+            "message",
+            "convesation",
+            "misc"
+          ]
+        },
+        "formattedref": {
+          "$ref": "#/$defs/Relaton_Bib_Formattedref"
+        },
+        "title": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Title"
+          }
+        },
+        "source": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Uri"
+          }
+        },
+        "docidentifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "docnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Date"
+          }
+        },
+        "contributor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Contributor"
+          }
+        },
+        "edition": {
+          "$ref": "#/$defs/Relaton_Bib_Edition"
+        },
+        "version": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Version"
+          }
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Note"
+          }
+        },
+        "language": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "locale": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "script": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "abstract": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Abstract"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/Relaton_Bib_Status"
+        },
+        "copyright": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Copyright"
+          }
+        },
+        "relation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Relation"
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Series"
+          }
+        },
+        "medium": {
+          "$ref": "#/$defs/Relaton_Bib_Medium"
+        },
+        "place": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Place"
+          }
+        },
+        "price": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Price"
+          }
+        },
+        "extent": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Extent"
+          }
+        },
+        "size": {
+          "$ref": "#/$defs/Relaton_Bib_Size"
+        },
+        "accesslocation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "license": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": []
+          }
+        },
+        "classification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Docidentifier"
+          }
+        },
+        "keyword": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Keyword"
+          }
+        },
+        "validity": {
+          "$ref": "#/$defs/Relaton_Bib_Validity"
+        },
+        "depiction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Depiction"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Series": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "main",
+            "alt"
+          ]
+        },
+        "formattedref": {
+          "$ref": "#/$defs/Relaton_Bib_Formattedref"
+        },
+        "title": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Title"
+          },
+          "minItems": 1
+        },
+        "place": {
+          "$ref": "#/$defs/Relaton_Bib_Place"
+        },
+        "organization": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "abbreviation": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "partnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "run": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Place": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "region": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Place_RegionType"
+          }
+        },
+        "country": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Place_RegionType"
+          }
+        },
+        "formatted_place": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "$ref": "#/$defs/Relaton_Bib_Uri"
+        }
+      }
+    },
+    "Relaton_Bib_Place_RegionType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "iso": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recommended": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Medium": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "genre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "form": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "carrier": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "size": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Price": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Extent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        },
+        "locality_stack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalityStack"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Locality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "\n        section|clause|part|paragraph|chapter|page|title|line|whole|table|annex|\n        figure|note|list|example|volume|issue|time|anchor|locality:[a-zA-Z0-9_]+\n      "
+        },
+        "reference_from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reference_to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_LocalityStack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "connective": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "and",
+            "or",
+            "from",
+            "to"
+          ]
+        },
+        "locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Size": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Size_Value"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "Relaton_Bib_Size_Value": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Keyword": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "vocab": {
+          "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+        },
+        "taxon": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_LocalizedString"
+          }
+        },
+        "vocabid": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Keyword_Vocabid"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_Keyword_Vocabid": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "term": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "begins": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ends": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_Depiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Image"
+          }
+        }
+      }
+    },
+    "Relaton_Bib_SourceLocalityStack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "connective": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "and",
+            "or",
+            "from",
+            "to"
+          ]
+        },
+        "source_locality": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_Locality"
+          }
+        }
+      }
+    },
+    "Relaton_Ietf_Ext": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "doctype": {
+          "$ref": "#/$defs/Relaton_Ietf_Doctype"
+        },
+        "subdoctype": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flavor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_ICS"
+          }
+        },
+        "structuredidentifier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relaton_Bib_StructuredIdentifier"
+          }
+        },
+        "area": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "apt",
+              "gen",
+              "int",
+              "ops",
+              "rtg",
+              "sec",
+              "tsv",
+              "Applications and Real-Time",
+              "General",
+              "Internet",
+              "Operations and Management",
+              "Routing",
+              "Security",
+              "Transport"
+            ]
+          }
+        },
+        "stream": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "IAB",
+            "IETF",
+            "Independent",
+            "IRTF",
+            "Legacy",
+            "Editorial"
+          ]
+        },
+        "ipr": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pi": {
+          "$ref": "#/$defs/Relaton_Ietf_ProcessingInstructions"
+        },
+        "consensus": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "index_include": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ipr_extract": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sort_refs": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sym_refs": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "toc_include": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "toc_depth": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "show_on_front_page": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Ietf_Doctype": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abbreviation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "rfc",
+            "internet-draft"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_ICS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Bib_StructuredIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "agency": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "klass": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "docnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "partnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "edition": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supplementtype": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supplementnumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "amendment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "corrigendum": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Relaton_Ietf_ProcessingInstructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artworkdelimiter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "artworklines": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorship": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "autobreaks": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "background": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "colonspace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "comments": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "docmapping": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "editing": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "emoticonic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "footer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "header": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inline": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "iprnotified": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "linkmailto": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "linefile": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notedraftinprogress": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "private": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "refparent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rfcedstyle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "slides": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text_list_symbols": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocappendix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocindent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocnarrow": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocompact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topblock": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "useobject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "strict": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subcompact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocinclude": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tocdepth": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "symrefs": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sortrefs": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

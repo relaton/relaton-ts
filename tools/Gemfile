@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+# The lutaml-model definitions in relaton/relaton are the single source of
+# truth for relaton-ts. Pinned by ref so the exported schema is reproducible;
+# bump the ref deliberately when upstream models move.
+gem "relaton", git: "https://github.com/relaton/relaton.git", ref: "3746f41822e9bcf9e959d68ad3e0a13ee195f2b1"
