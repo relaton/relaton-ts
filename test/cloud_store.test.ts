@@ -2,7 +2,7 @@ import { readFileSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { CloudStore, LocalStore } from "../src/cloud/index.js";
+import { CloudStore, LocalStore, resolveKey } from "../src/cloud/index.js";
 import type { Manifest } from "../src/cloud/types.js";
 
 // The canonical conformance fixtures (SSOT: TODO.relaton-cloud-store).
@@ -139,6 +139,13 @@ describe("LocalStore", () => {
     const reopen = new LocalStore(local.root);
     expect(reopen.read("fixtures", "RFC 7231")).toContain("RFC7231");
     expect(reopen.manifest("fixtures")?.entries.find((e) => e.key === "RFC 7231")).toBeTruthy();
+  });
+
+  it("resolves a docid reference to the storage key through the manifest", () => {
+    const manifest = fixtureManifest();
+    expect(resolveKey(manifest, "RFC 7231")).toBe("RFC 7231");
+    expect(resolveKey(manifest, "rfc 7231")).toBe("RFC 7231");
+    expect(resolveKey(manifest, "RFC 9999")).toBeUndefined;
   });
 
   it("rejects bytes that break the source's declared digest", async () => {

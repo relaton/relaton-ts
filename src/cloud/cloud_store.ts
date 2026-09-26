@@ -103,3 +103,18 @@ export class CloudStore {
     };
   }
 }
+
+/**
+ * Resolves a reference to the collection's storage key. Contract keys are
+ * URL-safe storage keys; slash-bearing docids travel in
+ * entries[].metadata.docid. Exact storage-key match first, then docid
+ * metadata (case-insensitive) — never path-encoding guesswork.
+ */
+export function resolveKey(manifest: Manifest, ref: string): string | undefined {
+  if (manifest.entries.some((e) => e.key === ref)) return ref;
+  const found = manifest.entries.find((e) => {
+    const docid = e.metadata?.docid;
+    return typeof docid === "string" && docid.toLowerCase() === ref.toLowerCase();
+  });
+  return found?.key;
+}
