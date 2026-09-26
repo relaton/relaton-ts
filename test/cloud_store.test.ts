@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { CloudStore, LocalStore, resolveKey } from "../src/cloud/index.js";
+import { parse } from "../src/index.js";
 import type { Manifest } from "../src/cloud/types.js";
 
 // The canonical conformance fixtures (SSOT: TODO.relaton-cloud-store).
@@ -98,6 +99,13 @@ describe("LocalStore", () => {
     // offline: no cloud involvement
     expect(local.read("fixtures", "RFC 7231")).toContain("RFC7231");
     expect(local.has("fixtures", "ISO 19115-1:2014")).toBe(true);
+
+    // end to end: the synced record parses into a validated RelatonItem
+    const item = parse(local.read("fixtures", "RFC 7231"));
+    expect(item.ok).toBe(true);
+    if (item.ok) {
+      expect((item.item as { id?: string }).id).toBe("RFC7231");
+    }
   });
 
   it("revalidates entries with if-none-match after the first read", async () => {
