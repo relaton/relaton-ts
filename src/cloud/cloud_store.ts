@@ -31,6 +31,8 @@ export class CloudStore {
   // in-process HttpCache).
   private manifestEtag?: string;
   private manifestBody?: string;
+  private entryEtags = new Map<string, string>();
+  private entryBodies = new Map<string, string>();
 
   constructor(opts: CloudStoreOptions) {
     if (!opts.base) throw new Error("CloudStore requires base");
@@ -69,9 +71,26 @@ export class CloudStore {
   async read(key: string): Promise<ReadResult> {
     const url = `${this.base}/collections/${encodeURIComponent(this.collection)}` +
       `/entries/${encodeURIComponent(key)}`;
-    const res = await this.wire(url, { ...this.headers });
-    if (res.status === 200) return { ok: true, body: res.body };
-    if (res.status === 404) return { ok: false, reason: "not_found" };
+    const headers = { ...this.headers };
+    const etag = this.entryEtags.get(key);
+    if (etag) headers["if-none-match"] = etag;
+
+    const res = await this.wire(url, headers);
+    if (res.status === 304 && this.entryBodies.has(key)) {
+      return { ok: true, body: this.entryBodies.get(key)! };
+    }
+    if (res.status === 200) {
+      if (res.etag) {
+        this.entryEtags.set(key, res.etag);
+        this.entryBodies.set(key, res.body);
+      }
+      return { ok: true, body: res.body };
+    }
+    if (res.status === 404) {
+      this.entryEtags.delete(key);
+      this.entryBodies.delete(key);
+      return { ok: false, reason: "not_found" };
+    }
     return { ok: false, reason: "backend", detail: `HTTP ${res.status}` };
   }
 

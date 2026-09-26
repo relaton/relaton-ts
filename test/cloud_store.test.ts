@@ -100,6 +100,47 @@ describe("LocalStore", () => {
     expect(local.has("fixtures", "ISO 19115-1:2014")).toBe(true);
   });
 
+  it("revalidates entries with if-none-match after the first read", async () => {
+    const seen: string[] = [];
+    const inner = fetchServingFixtures();
+    const fetchImpl = (async (url: string, init?: RequestInit): Promise<Response> => {
+      const inm = String((init?.headers as Record<string, string>)?.["if-none-match"] ?? "");
+      seen.push(inm);
+      if (inm) return new Response(null, { status: 304 }) as Response;
+      const res = (await inner(url, init)) as Response;
+      if (res.status === 200 && url.includes("/entries/")) {
+        return new Response(await res.text(), {
+          status: 200,
+          headers: { etag: '"entry-v1"' },
+        }) as Response;
+      }
+      return res;
+    }) as unknown as typeof fetch;
+
+    const cloud = new CloudStore({ base: "https://cloud.test", collection: "fixtures", fetchImpl });
+    const first = await cloud.read("RFC 7231");
+    expect(first).toEqual({ ok: true, body: expect.stringContaining("RFC7231") });
+    const second = await cloud.read("RFC 7231");
+    expect(second).toEqual({ ok: true, body: expect.stringContaining("RFC7231") });
+    expect(seen).toEqual(["", '"entry-v1"']);
+  });
+
+  it("fetchThrough serves locally after the first read and records the entry", async () => {
+    const cloud = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: fetchServingFixtures(),
+    });
+    const local = new LocalStore(mkdtempSync(join(tmpdir(), "relaton-through-")));
+
+    const first = await local.fetchThrough(cloud, "fixtures", "RFC 7231");
+    expect(first).toEqual({ ok: true, body: expect.stringContaining("RFC7231") });
+    // second read never reaches the network (fresh LocalStore over same dir)
+    const reopen = new LocalStore(local.root);
+    expect(reopen.read("fixtures", "RFC 7231")).toContain("RFC7231");
+    expect(reopen.manifest("fixtures")?.entries.find((e) => e.key === "RFC 7231")).toBeTruthy();
+  });
+
   it("rejects bytes that break the source's declared digest", async () => {
     const bad = new CloudStore({
       base: "https://cloud.test",

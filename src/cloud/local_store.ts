@@ -52,6 +52,52 @@ export class LocalStore {
     return existsSync(this.entryPath(collection, key));
   }
 
+  /**
+   * Read-through: serve from this package, and on a miss fetch one key from
+   * the source and store it (appending to the package manifest). The
+   * TypeScript counterpart of Repository's read-through with an explicit
+   * local package cache.
+   */
+  async fetchThrough(
+    source: { manifest(): Promise<Manifest>; read(key: string): Promise<{ ok: true; body: string } | { ok: false; reason: string }> },
+    collection: string,
+    key: string,
+  ): Promise<{ ok: true; body: string } | { ok: false; reason: string }> {
+    const path = this.entryPath(collection, key);
+    if (existsSync(path)) return { ok: true, body: readFileSync(path, "utf8") };
+
+    const result = await source.read(key);
+    if (!result.ok) return result;
+
+    const digest = sha256(result.body);
+    const location = `entries/${encodeKey(key)}`;
+    mkdirSync(this.entriesDir(collection), { recursive: true });
+    writeFileSync(join(this.collectionDir(collection), location), result.body, "utf8");
+
+    const remote = await source.manifest();
+    const declared = remote.entries.find((e) => e.key === key);
+    if (declared?.digest && declared.digest !== digest) {
+      throw new Error(`digest mismatch for ${key}: manifest declares ${declared.digest}`);
+    }
+    const entries = this.manifest(collection)?.entries ?? [];
+    if (!entries.some((e) => e.key === key)) {
+      entries.push({ key, location, digest, metadata: declared?.metadata });
+    }
+    const local: Manifest = {
+      version: remote.version,
+      generated: new Date().toISOString(),
+      count: entries.length,
+      shards: remote.shards,
+      entries,
+    };
+    writeFileSync(
+      join(this.collectionDir(collection), "manifest.json"),
+      JSON.stringify(local, null, 2),
+      "utf8",
+    );
+    return { ok: true, body: result.body };
+  }
+
   manifest(collection: string): Manifest | null {
     const path = join(this.collectionDir(collection), "manifest.json");
     if (!existsSync(path)) return null;
