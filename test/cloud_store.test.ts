@@ -1,0 +1,120 @@
+import { readFileSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import { CloudStore, LocalStore } from "../src/cloud/index.js";
+import type { Manifest } from "../src/cloud/types.js";
+
+// The canonical conformance fixtures (SSOT: TODO.relaton-cloud-store).
+const FIXTURES = process.env.RELATON_CLOUD_FIXTURES ??
+  join(import.meta.dirname, "..", "..", "TODO.relaton-cloud-store", "fixtures");
+
+const fixtureManifest = (): Manifest =>
+  JSON.parse(readFileSync(join(FIXTURES, "manifest.json"), "utf8")) as Manifest;
+
+function fetchServingFixtures() {
+  return (async (url: string): Promise<Response> => {
+    const u = new URL(url);
+    const file = (() => {
+      if (u.pathname === "/collections") {
+        return { status: 200, body: JSON.stringify({ collections: [{ name: "fixtures", count: 3 }] }) };
+      }
+      const m = u.pathname.match(/^\/collections\/([^/]+)\/manifest$/);
+      if (m) {
+        return { status: 200, body: readFileSync(join(FIXTURES, "manifest.json"), "utf8"), etag: '"fixtures-1"' };
+      }
+      const e = u.pathname.match(/^\/collections\/[^/]+\/entries\/(.+)$/);
+      if (e) {
+        const location = fixtureManifest().entries.find((x) => x.key === decodeURIComponent(e[1]))?.location;
+        if (!location) return { status: 404, body: "no such entry" };
+        return { status: 200, body: readFileSync(join(FIXTURES, location), "utf8") };
+      }
+      return { status: 404, body: "" };
+    })();
+    return new Response(file.body, {
+      status: file.status,
+      headers: "etag" in file && file.etag ? { etag: file.etag } : {},
+    }) as Response;
+  }) as unknown as typeof fetch;
+}
+
+describe("CloudStore", () => {
+  it("reads the conformance manifest through the contract paths", async () => {
+    const cloud = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: fetchServingFixtures(),
+    });
+    const manifest = await cloud.manifest();
+    expect(manifest.count).toBe(3);
+    expect(manifest.entries.length).toBe(3);
+  });
+
+  it("reads entries by key and splits 404 from backend failures", async () => {
+    const cloud = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: fetchServingFixtures(),
+    });
+    const hit = await cloud.read("RFC 7231");
+    expect(hit).toEqual({ ok: true, body: expect.stringContaining("RFC7231") });
+
+    const miss = await cloud.read("RFC 9999");
+    expect(miss).toEqual({ ok: false, reason: "not_found" });
+  });
+
+  it("sends if-none-match and honors 304 for the manifest", async () => {
+    const seen: string[] = [];
+    const inner = fetchServingFixtures();
+    const fetchImpl = (async (url: string, init?: RequestInit): Promise<Response> => {
+      seen.push((init?.headers?.["if-none-match"] ?? "") as string);
+      if ((init?.headers?.["if-none-match"] as string) === '"fixtures-1"') {
+        return new Response(null, { status: 304, headers: { etag: '"fixtures-1"' } }) as Response;
+      }
+      return inner(url, init);
+    }) as unknown as typeof fetch;
+
+    const cloud = new CloudStore({ base: "https://cloud.test", collection: "fixtures", fetchImpl });
+    await cloud.manifest();
+    const again = await cloud.manifest();
+    expect(again.count).toBe(3);
+    expect(seen[1]).toBe('"fixtures-1"');
+  });
+});
+
+describe("LocalStore", () => {
+  it("syncs a source into the GCR-style layout and serves it offline", async () => {
+    const cloud = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: fetchServingFixtures(),
+    });
+    const local = new LocalStore(mkdtempSync(join(tmpdir(), "relaton-sync-")));
+
+    const manifest = await local.syncFrom(cloud, "fixtures");
+    expect(manifest.count).toBe(3);
+    expect(manifest.entries[0].digest).toMatch(/^sha256:/);
+
+    // offline: no cloud involvement
+    expect(local.read("fixtures", "RFC 7231")).toContain("RFC7231");
+    expect(local.has("fixtures", "ISO 19115-1:2014")).toBe(true);
+  });
+
+  it("rejects bytes that break the source's declared digest", async () => {
+    const bad = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: (async (url: string): Promise<Response> => {
+        if (url.endsWith("/entries/k")) {
+          return new Response("tampered", { status: 200 }) as Response;
+        }
+        return new Response(
+          JSON.stringify({ version: 1, generated: "x", count: 1, shards: 0, entries: [{ key: "k", digest: "sha256:dead" }] }),
+          { status: 200 },
+        ) as Response;
+      }) as unknown as typeof fetch,
+    });
+    const local = new LocalStore(mkdtempSync(join(tmpdir(), "relaton-sync-bad-")));
+    await expect(local.syncFrom(bad, "fixtures")).rejects.toThrow(/digest mismatch/);
+  });
+});
