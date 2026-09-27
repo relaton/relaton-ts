@@ -174,3 +174,26 @@ describe("LocalStore", () => {
     await expect(local.syncFrom(bad, "fixtures")).rejects.toThrow(/digest mismatch/);
   });
 });
+
+describe("search", () => {
+  it("filters manifest entries by metadata docid", async () => {
+    const { search, LocalStore } = await import("../src/cloud/local_store.js");
+    const { resolveKey } = await import("../src/cloud/index.js");
+    void resolveKey;
+    const cloud = new CloudStore({
+      base: "https://cloud.test",
+      collection: "fixtures",
+      fetchImpl: fetchServingFixtures(),
+    });
+    const local = new LocalStore(mkdtempSync(join(tmpdir(), "relaton-search-")));
+    const manifest = await local.syncFrom(cloud, "fixtures");
+
+    const hits = search(manifest, { docid: "RFC 7231" });
+    expect(hits.length).toBe(1);
+    expect(hits[0].key).toBe("RFC 7231");
+
+    expect(search(manifest, { docid: "rfc 7231" }).length).toBe(1); // case-insensitive
+    expect(search(manifest, { docid: "RFC 9999" })).toEqual([]);
+    expect(search(manifest, {})).toEqual([]); // unfiltered search is keys
+  });
+});

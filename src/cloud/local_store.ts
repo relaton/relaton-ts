@@ -152,3 +152,24 @@ export class LocalStore {
     return local;
   }
 }
+
+/**
+ * Filters the collection's manifest entries by metadata key/values.
+ * All given key/values must match (case-insensitive on strings) — the
+ * TypeScript counterpart of lutaml-store's Repository#search.
+ */
+export function search(
+  manifest: Manifest,
+  filter: Record<string, string>,
+): ManifestEntry[] {
+  const keys = Object.keys(filter);
+  if (keys.length === 0) return [];
+  return manifest.entries.filter((entry) =>
+    keys.every((k) => {
+      const mv = entry.metadata?.[k];
+      return typeof mv === "string"
+        ? mv.toLowerCase() === filter[k]?.toLowerCase()
+        : mv === filter[k];
+    }),
+  );
+}
