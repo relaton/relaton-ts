@@ -1,7 +1,7 @@
 {
   "name": "relaton",
-  "version": "0.1.0",
-  "description": "TypeScript implementation of the Relaton bibliographic model \u2014 YAML/XML/AsciiBib/ISO 690 serializations and Metanorma citation utilities on @pubid/pubid",
+  "version": "0.1.1",
+  "description": "TypeScript implementation of the Relaton bibliographic model — YAML/XML/AsciiBib/ISO 690 serializations and Metanorma citation utilities on @pubid/pubid",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
