@@ -30,7 +30,7 @@ function segs(...parts: string[]): string {
     .join(" ");
 }
 
-interface Rec {
+export interface Rec {
   type?: string;
   docidentifier?: { content?: string; type?: string; primary?: boolean }[];
   title?: { content?: string; type?: string; language?: string }[];
@@ -66,7 +66,7 @@ function iso690Person(name: { completename?: unknown; given?: unknown; surname?:
   return "";
 }
 
-function primaryDocid(rec: Rec): string {
+export function primaryDocid(rec: Rec): string {
   const docids = rec.docidentifier ?? [];
   const primary = docids.find((d) => d.primary) ?? docids[0];
   return contentOf(primary) || "";
@@ -78,7 +78,7 @@ function primaryDocid(rec: Rec): string {
  * one citation language (English preferred, else first seen) and build
  * the full title from that language only.
  */
-function fullTitleOf(rec: Rec): string {
+export function fullTitleOf(rec: Rec): string {
   const titles = (rec.title ?? []).filter((t) => contentOf(t));
   const langOf = (t: { language?: string | undefined }) => (t.language ?? "").toLowerCase();
   const langs = [...new Set(titles.map(langOf).filter(Boolean))];
@@ -98,14 +98,14 @@ function fullTitleOf(rec: Rec): string {
   return [composite, part].filter((x) => x && contentOf(x)).map((x) => contentOf(x)).join(" — ");
 }
 
-function yearOf(rec: Rec): string {
+export function yearOf(rec: Rec): string {
   const dates = rec.date ?? [];
   const published = dates.find((d) => d.type === "published" || d.type === "issued") ?? dates[0];
   const raw = published?.at ?? published?.from ?? "";
   return raw.match(/\d{4}/)?.[0] ?? "";
 }
 
-function originatorsOf(rec: Rec, roles: string[]): string {
+export function originatorsOf(rec: Rec, roles: string[]): string {
   const names: string[] = [];
   for (const c of rec.contributor ?? []) {
     const roleTypes = asArray(c.role).map((r) => r?.type ?? "");
