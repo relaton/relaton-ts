@@ -1,4 +1,4 @@
-import { readFileSync, mkdtempSync } from "node:fs";
+import { readFileSync, mkdtempSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -7,8 +7,11 @@ import { parse } from "../src/index.js";
 import type { Manifest } from "../src/cloud/types.js";
 
 // The canonical conformance fixtures (SSOT: TODO.relaton-cloud-store).
+// They live outside this repo, so CI (no sibling checkout) skips the
+// suite; run locally or set RELATON_CLOUD_FIXTURES to a checkout.
 const FIXTURES = process.env.RELATON_CLOUD_FIXTURES ??
   join(import.meta.dirname, "..", "..", "TODO.relaton-cloud-store", "fixtures");
+const fixturesPresent = existsSync(join(FIXTURES, "manifest.json"));
 
 const fixtureManifest = (): Manifest =>
   JSON.parse(readFileSync(join(FIXTURES, "manifest.json"), "utf8")) as Manifest;
@@ -39,7 +42,7 @@ function fetchServingFixtures() {
   }) as unknown as typeof fetch;
 }
 
-describe("CloudStore", () => {
+describe.skipIf(!fixturesPresent)("CloudStore", () => {
   it("reads the conformance manifest through the contract paths", async () => {
     const cloud = new CloudStore({
       base: "https://cloud.test",
@@ -83,7 +86,7 @@ describe("CloudStore", () => {
   });
 });
 
-describe("LocalStore", () => {
+describe.skipIf(!fixturesPresent)("LocalStore", () => {
   it("syncs a source into the GCR-style layout and serves it offline", async () => {
     const cloud = new CloudStore({
       base: "https://cloud.test",
@@ -175,7 +178,7 @@ describe("LocalStore", () => {
   });
 });
 
-describe("search", () => {
+describe.skipIf(!fixturesPresent)("search", () => {
   it("filters manifest entries by metadata docid", async () => {
     const { search, LocalStore } = await import("../src/cloud/local_store.js");
     const { resolveKey } = await import("../src/cloud/index.js");
