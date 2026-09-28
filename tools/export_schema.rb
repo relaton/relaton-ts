@@ -64,7 +64,7 @@ end
 #   0.8.60: def-level oneOf, each branch a whole group
 #   0.8.61: def-level allOf of oneOf, each oneOf a group of fragments
 #   0.8.61 nested (Date): def-level anyOf of fragments and/or nested wrappers
-#   0.8.76: expanded XOR — oneOf of [not-anyOf(all members)] plus one allOf
+#   0.8.74+: expanded XOR — oneOf of [not-anyOf(all members)] plus one allOf
 #   branch per group (fragment required + not-required the others)
 CHOICE_GROUPS = lambda do |d|
   if d["oneOf"].is_a?(Array) && d["oneOf"].first.is_a?(Hash) &&
@@ -90,9 +90,10 @@ CHOICE_GROUPS = lambda do |d|
   nil
 end
 
-# Fallback for defs whose rendered schema lost the choice constraint
-# (0.8.76 drops nested choices from the JSON Schema output): derive the
-# groups from the model's own choice declarations. A branch that is a
+# Fallback for defs whose emitted schema carries no choice composition at
+# all — nested choices (BibDate's from/to vs at) are not emitted in the
+# 0.8.74+ encoding, while top-level choices are. The declared groups are
+# model truth, so read them from choice_attributes: a branch that is a
 # nested choice flattens to its member attributes.
 MODEL_CHOICE_GROUPS = lambda do |def_name|
   klass = begin
