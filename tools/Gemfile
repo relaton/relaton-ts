@@ -4,3 +4,6 @@ source "https://rubygems.org"
 # truth for relaton-ts. Pinned by ref so the exported schema is reproducible;
 # bump the ref deliberately when upstream models move.
 gem "relaton", git: "https://github.com/relaton/relaton.git", ref: "3746f41822e9bcf9e959d68ad3e0a13ee195f2b1"
+# Float ~> 0.8.0 lets CI resolve newer lutaml-model, changing the rendered
+# schema and failing the artifact check. Pin exactly; bump deliberately.
+gem "lutaml-model", "0.8.61"
