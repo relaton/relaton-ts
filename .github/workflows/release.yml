@@ -1,0 +1,33 @@
+name: release
+
+# Publishing is OIDC-based (npm trusted publishing): no NPM_TOKEN secret.
+# The npm package "relaton" lists this file as its trusted publisher with
+# environment "release". Cut a GitHub Release (tagging stays the owner's
+# decision) or run this manually; the version published is the one in
+# package.json.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      # Trusted publishing needs an npm CLI that can fetch the Actions OIDC
+      # token (>= 11.5.1); Node 22 bundles an older npm.
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm publish --provenance
