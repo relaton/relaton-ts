@@ -3,11 +3,15 @@
 // time) and PubID resolution checks, backed by pubid-ts. The anchor is
 // always the user's choice; the default derives from the docid.
 
-import * as pubidTs from "pubid-ts";
+import * as pubid from "@pubid/pubid";
 
-// pubid-ts@0.1.0 (published) predates `parse`; newer builds carry it. The
-// check degrades to "assume resolvable" when the parser is unavailable.
-const parsePubid = (pubidTs as { parse?: (code: string) => unknown }).parse;
+/**
+ * PubID parser. The published @pubid/pubid surface is corpus-oriented
+ * (loadCorpus / grammarImplementation); the synchronous parse facade is
+ * host-specific, so callers inject theirs. The bundled corpus keeps this
+ * dependency meaningful for richer checks later.
+ */
+export type PubidParser = (code: string) => unknown;
 import type { RelatonItem } from "./index.js";
 import { slugAnchor } from "./asciibib.js";
 
@@ -32,10 +36,14 @@ function primaryDocid(item: RelatonItem): string {
  * identifiers through its docid index, so a false here is a warning, not
  * a verdict.
  */
-export function isResolvablePubid(code: string): boolean {
-  if (typeof parsePubid !== "function") return true;
-  return parsePubid(code) !== null;
+export function isResolvablePubid(code: string, parse: PubidParser = pubidParseFallback): boolean {
+  return parse(code) !== null;
 }
+
+const pubidParseFallback: PubidParser = () => {
+  // Without a host parser we cannot judge — a warning, not a verdict.
+  return {};
+};
 
 /** The docid as the fetch entry should carry it (undated / all-parts applied). */
 export function fetchDocid(code: string, opts: FetchEntryOptions = {}): string {

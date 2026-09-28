@@ -20,7 +20,7 @@
     "yaml": "^2.6.0",
     "zod": "^3.24.0",
     "fast-xml-parser": "^5.11.1",
-    "pubid-ts": "^0.1.0"
+    "@pubid/pubid": "^0.1.8"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
