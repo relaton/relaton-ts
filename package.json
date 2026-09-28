@@ -5,6 +5,8 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
+    "export:schema": "bundle exec ruby tools/export_schema.rb",
+    "generate": "tsx tools/codegen.ts",
     "build": "tsc",
     "test": "vitest run",
     "prepublishOnly": "npm run build"
