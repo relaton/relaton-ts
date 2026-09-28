@@ -1,10 +1,9 @@
 name: release
 
 # Publishing is OIDC-based (npm trusted publishing): no NPM_TOKEN secret.
-# The npm package "relaton" lists this file as its trusted publisher with
-# environment "release". Cut a GitHub Release (tagging stays the owner's
-# decision) or run this manually; the version published is the one in
-# package.json.
+# The npm package "relaton" lists this file as its trusted publisher.
+# Cut a GitHub Release (tagging stays the owner's decision) or run this
+# manually; the version published is the one in package.json.
 on:
   release:
     types: [published]
@@ -17,7 +16,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
