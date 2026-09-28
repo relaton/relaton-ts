@@ -96,7 +96,7 @@ describe("toIso690", () => {
   });
 });
 
-import { fetchEntry, fetchDocid, isResolvablePubid } from "../src/cite";
+import { fetchEntry, fetchDocid, isResolvablePubid, type PubidParser } from "../src/cite";
 
 describe("cite utilities", () => {
   const item = parseItem({
@@ -119,9 +119,10 @@ describe("cite utilities", () => {
     expect(fetchDocid("ISO 690-1:2016", { allParts: true })).toBe("ISO 690 (all parts)");
   });
 
-  const hasParser = typeof (await import("pubid-ts") as { parse?: unknown }).parse === "function";
-  (hasParser ? it : it.skip)("checks PubID resolvability via pubid-ts", () => {
-    expect(isResolvablePubid("ISO 19115-3:2023")).toBe(true);
-    expect(isResolvablePubid("NOT A PUBID %%%")).toBe(false);
+  it("checks PubID resolvability with an injected parser", () => {
+    const fake: PubidParser = (code) => code.includes("%") ? null : {};
+    expect(isResolvablePubid("ISO 19115-3:2023", fake)).toBe(true);
+    expect(isResolvablePubid("NOT A PUBID %%%", fake)).toBe(false);
+    expect(isResolvablePubid("anything")).toBe(true); // no parser: warning, not verdict
   });
 });
