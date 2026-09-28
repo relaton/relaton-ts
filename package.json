@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "description": "TypeScript implementation of the Relaton bibliographic model, generated from the lutaml-model definitions in relaton/relaton",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
-    "export:schema": "bundle exec ruby tools/export_schema.rb",
-    "generate": "tsx tools/codegen.ts",
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "relaton",
@@ -19,12 +18,19 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "yaml": "^2.6.0",
-    "zod": "^3.24.0"
+    "zod": "^3.24.0",
+    "fast-xml-parser": "^5.11.1",
+    "pubid-ts": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
-  }
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ]
 }

@@ -62,3 +62,7 @@ export function toJson(item: RelatonItem): string {
 export function toYaml(item: RelatonItem): string {
   return stringifyYaml(item);
 }
+export { fromXml, toXml, detectXml } from "./xml.js";
+export { toAsciiBib, slugAnchor } from "./asciibib.js";
+export { toIso690 } from "./iso690.js";
+export { fetchEntry, fetchDocid, isResolvablePubid } from "./cite.js";
