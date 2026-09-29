@@ -66,4 +66,5 @@ export { fromXml, toXml, detectXml } from "./xml.js";
 export { toAsciiBib, slugAnchor } from "./asciibib.js";
 export { toIso690 } from "./iso690.js";
 export { toChicago, toApa } from "./cite_styles.js";
+export { toBibtex } from "./bibtex.js";
 export { fetchEntry, fetchDocid, isResolvablePubid } from "./cite.js";
