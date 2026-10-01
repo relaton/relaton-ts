@@ -64,7 +64,7 @@ export function toYaml(item: RelatonItem): string {
 }
 export { fromXml, toXml, detectXml } from "./xml.js";
 export { toAsciiBib, slugAnchor } from "./asciibib.js";
-export { toIso690 } from "./iso690.js";
+export { toIso690, toIso690Citation } from "./iso690.js";
 export { toChicago, toApa } from "./cite_styles.js";
 export { toBibtex } from "./bibtex.js";
 export { toRis } from "./ris.js";

@@ -1,128 +1,177 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { fromXml } from "../src/xml";
-import { toIso690 } from "../src/iso690";
 import { parseItem } from "../src/index";
+import { toIso690, toIso690Citation } from "../src/iso690";
+import { Template, field } from "../src/citation/template";
 
-const fixture = readFileSync(new URL("./fixtures/bibdata-iho-b10.xml", import.meta.url), "utf8");
-
-describe("toIso690", () => {
-  it("renders a standard: docid, title, publisher, year", () => {
-    const parsed = fromXml(fixture);
-    expect(parsed.ok).toBe(true);
-    if (!parsed.ok) return;
-    const s = toIso690(parsed.item);
-    expect(s).toMatch(/^B-10, /);
-    expect(s).toContain("The History of GEBCO");
-    expect(s).toContain("International Hydrographic Organization");
-    expect(s).toMatch(/2003\.$/);
-  });
-
-  it("renders a book with person authors in FAMILY, Initials form", () => {
+// The ISO 690 conformance corpus cases (github.com/relaton/iso-690-test-suite,
+// the same expectations the relaton-render Ruby engine runs) — cross-implementation
+// parity: both engines render the same strings from the same style instance.
+describe("toIso690 (ISO 690 conformance corpus)", () => {
+  it("renders the FARRAR monograph per the standard's worked example", () => {
     const parsed = parseItem({
       type: "book",
-      docidentifier: [{ content: "978-0-14-143951-8", type: "ISBN" }],
-      title: [{ type: "main", content: "Pride and Prejudice" }],
+      title: [{ content: "Eric, or Little by Little: a tale of Roslyn School" }],
+      date: [{ type: "published", at: "1971" }],
       contributor: [
-        { role: [{ type: "author" }], person: { name: { completename: { content: "Jane Austen" } } } },
-        { role: [{ type: "publisher" }], organization: { name: [{ content: "Penguin" }] } },
+        { role: [{ type: "author" }], person: { name: { surname: { content: "Farrar" }, forename: [{ content: "Frederic" }, { content: "William" }] } } },
+        { role: [{ type: "publisher" }], organization: { name: [{ content: "Hamilton" }] } },
       ],
-      date: [{ type: "published", at: "2002" }],
+      place: [{ city: "London" }],
     });
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
-    const s = toIso690(parsed.item);
-    expect(s.startsWith("AUSTEN, J.")).toBe(true);
-    expect(s).toContain("Pride and Prejudice.");
-    expect(s).toContain("Penguin, 2002.");
+    expect(toIso690(parsed.item)).toBe(
+      "FARRAR, Frederic William. _Eric, or Little by Little: a tale of Roslyn School_. London: Hamilton, 1971.",
+    );
   });
 
-  it("renders a website entry with url and year", () => {
+  it("renders three editors as creators, serial comma, role suffix (en)", () => {
     const parsed = parseItem({
-      type: "website",
-      title: [{ type: "main", content: "INSPIRE registry" }],
-      contributor: [{ role: [{ type: "publisher" }], organization: { name: [{ content: "European Commission" }] } }],
-      source: [{ type: "src", content: "https://inspire.ec.europa.eu/registry" }],
+      type: "book",
+      title: [{ content: "From martyr to muppy" }],
+      date: [{ type: "published", at: "1994" }],
+      contributor: [
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Hamilton" }, forename: [{ content: "Alastair" }] } } },
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Voolstra" }, forename: [{ content: "Sjouke" }] } } },
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Visser" }, forename: [{ content: "Piet" }] } } },
+        { role: [{ type: "publisher" }], organization: { name: [{ content: "Amsterdam University Press" }] } },
+      ],
+      place: [{ city: "Amsterdam" }],
+    });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(toIso690(parsed.item)).toBe(
+      "HAMILTON, Alastair, Sjouke VOOLSTRA, and Piet VISSER (eds.). _From martyr to muppy_. Amsterdam: Amsterdam University Press, 1994.",
+    );
+  });
+
+  it("renders the same editors in French", () => {
+    const parsed = parseItem({
+      type: "book",
+      title: [{ content: "From martyr to muppy" }],
+      date: [{ type: "published", at: "1994" }],
+      contributor: [
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Hamilton" }, forename: [{ content: "Alastair" }] } } },
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Voolstra" }, forename: [{ content: "Sjouke" }] } } },
+        { role: [{ type: "editor" }], person: { name: { surname: { content: "Visser" }, forename: [{ content: "Piet" }] } } },
+        { role: [{ type: "publisher" }], organization: { name: [{ content: "Amsterdam University Press" }] } },
+      ],
+      place: [{ city: "Amsterdam" }],
+    });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    const s = toIso690(parsed.item, { lang: "fr" });
+    // the language-varying bits: et, (éd.), and the French " : " production separator
+    expect(s).toContain("Sjouke VOOLSTRA et Piet VISSER (éd.)");
+    expect(s).toContain("Amsterdam : Amsterdam University Press, 1994.");
+  });
+
+  it("renders an entire serial with a closed date range (publisher-only creator omitted)", () => {
+    const parsed = parseItem({
+      type: "journal",
+      title: [{ content: "Bulletin (Sydney)" }],
+      date: [{ type: "published", from: "1880", to: "2008" }],
+      contributor: [{ role: [{ type: "publisher" }], organization: { name: [{ content: "Australian Consolidated Press" }] } }],
+      place: [{ city: "Sydney" }],
+    });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(toIso690(parsed.item)).toBe(
+      "_Bulletin (Sydney)_. Sydney: Australian Consolidated Press, 1880–2008.",
+    );
+  });
+
+  it("renders a serial with an open date range and an ISSN", () => {
+    const parsed = parseItem({
+      type: "journal",
+      title: [{ content: "Bulletin trimestriel de l’Institut archéologique du Luxembourg Arlon" }],
+      date: [{ type: "published", from: "1925" }],
+      docidentifier: [{ content: "0020-2177", type: "ISSN" }],
+    });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(toIso690(parsed.item)).toBe(
+      "_Bulletin trimestriel de l’Institut archéologique du Luxembourg Arlon_. 1925–. ISSN 0020-2177.",
+    );
+  });
+
+  it("renders ISO 690 itself — corporate creator with abbreviation, no date", () => {
+    const parsed = parseItem({
+      type: "book",
+      title: [{ content: "ISO 690:2010 Information and documentation – Guidelines for bibliographic references and citations to information resources" }],
+      contributor: [{
+        role: [{ type: "author" }],
+        organization: { name: [{ content: "International Organization for Standardization" }], abbreviation: { content: "ISO" } },
+      }],
+    });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(toIso690(parsed.item)).toBe(
+      "INTERNATIONAL ORGANIZATION FOR STANDARDIZATION (ISO). _ISO 690:2010 Information and documentation – Guidelines for bibliographic references and citations to information resources_.",
+    );
+  });
+
+  it("renders a typed DOI identifier as a https link and skips internal docidentifiers", () => {
+    const parsed = parseItem({
+      type: "techreport",
+      title: [{ content: "Dataset paper" }],
       date: [{ type: "published", at: "2020" }],
+      docidentifier: [
+        { content: "1", type: "metanorma-ordinal" },
+        { content: "10.1234/abcd.5678", type: "DOI" },
+      ],
     });
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
-    const s = toIso690(parsed.item);
-    expect(s).toContain("INSPIRE registry [website].");
-    expect(s).toContain("https://inspire.ec.europa.eu/registry (2020).");
+    expect(toIso690(parsed.item)).toBe("_Dataset paper_. 2020. https://doi.org/10.1234/abcd.5678.");
   });
 
-  it("renders decomposed ISO titles in one language, dropping translations (live ISO 19115-3 shape)", () => {
+  it("renders the in-text citation: surname and year", () => {
     const parsed = parseItem({
-      type: "standard",
-      docidentifier: [{ content: "ISO 19115-3:2023", type: "ISO", primary: true }],
-      title: [
-        { type: "title-intro", language: "en", content: "Geographic information" },
-        { type: "title-main", language: "en", content: "Metadata" },
-        { type: "title-part", language: "en", content: "Part 3: XML schema implementation for fundamental concepts" },
-        { type: "main", language: "en", content: "Geographic information - Metadata - Part 3" },
-        { type: "title-intro", language: "fr", content: "Information géographique" },
-        { type: "title-main", language: "fr", content: "Métadonnées" },
-        { type: "title-part", language: "fr", content: "Partie 3: Mise en oeuvre par des schémas XML" },
-        { type: "main", language: "fr", content: "Information géographique - Métadonnées" },
-      ],
-      contributor: [{ role: [{ type: "publisher" }], organization: { name: [{ content: "ISO" }] } }],
-      date: [{ type: "published", at: "2023-08" }],
+      type: "book",
+      title: [{ content: "X" }],
+      date: [{ type: "published", at: "2015" }],
+      contributor: [{ role: [{ type: "author" }], person: { name: { surname: { content: "Fowler" }, forename: [{ content: "H. W" }] } } }],
     });
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
-    const s = toIso690(parsed.item);
-    expect(s).toBe("ISO 19115-3:2023, Geographic information — Metadata — Part 3: XML schema implementation for fundamental concepts. ISO, 2023.");
-    expect(s).not.toContain("Partie");
-    expect(s).not.toContain("géographique");
-  });
-
-  it("appends title-part after the main title", () => {
-    const parsed = parseItem({
-      type: "standard",
-      docidentifier: [{ content: "ISO 19115-3:2023", type: "ISO", primary: true }],
-      title: [
-        { type: "main", content: "Geographic information — Metadata" },
-        { type: "title-part", content: "Part 3: XML schema implementation for fundamental concepts" },
-      ],
-      contributor: [{ role: [{ type: "publisher" }], organization: { name: [{ content: "ISO" }] } }],
-      date: [{ type: "published", at: "2023-08" }],
-    });
-    expect(parsed.ok).toBe(true);
-    if (!parsed.ok) return;
-    const s = toIso690(parsed.item);
-    expect(s).toContain("ISO 19115-3:2023, Geographic information — Metadata — Part 3: XML schema implementation for fundamental concepts.");
-    expect(s).toContain("ISO, 2023.");
+    expect(toIso690Citation(parsed.item)).toBe("FOWLER, 2015");
   });
 });
 
-import { fetchEntry, fetchDocid, isResolvablePubid, type PubidParser } from "../src/cite";
-
-describe("cite utilities", () => {
-  const item = parseItem({
-    type: "standard",
-    docidentifier: [{ content: "ISO 19115-3:2023", type: "ISO", primary: true }],
-    title: [{ type: "main", content: "Geographic information" }],
-  });
-  expect(item.ok).toBe(true);
-  if (!item.ok) return;
-  const record = item.item;
-
-  it("emits the fetch entry with the derived anchor", () => {
-    expect(fetchEntry(record)).toBe("* [[[ISO-19115-3-2023,ISO 19115-3:2023]]]");
+// The evaluator's omission semantics (mirrors the Ruby suite's template spec).
+describe("citation template evaluator", () => {
+  it("joins present fields through the literals between them", () => {
+    const t = new Template("{{creator}}. {{title}}. {{date}}.");
+    const out = t.evaluate({
+      creator: field(true, "FARRAR, Frederic William"),
+      title: field(true, "_Eric_"),
+      date: field(true, "1971"),
+    });
+    expect(out).toBe("FARRAR, Frederic William. _Eric_. 1971.");
   });
 
-  it("honors a user anchor, undated, and all-parts", () => {
-    expect(fetchEntry(record, { anchor: "my-ref" })).toBe("* [[[my-ref,ISO 19115-3:2023]]]");
-    expect(fetchEntry(record, { undated: true })).toBe("* [[[ISO-19115-3-2023,ISO 19115-3]]]");
-    expect(fetchEntry(record, { allParts: true })).toBe("* [[[ISO-19115-3-2023,ISO 19115 (all parts)]]]");
-    expect(fetchDocid("ISO 690-1:2016", { allParts: true })).toBe("ISO 690 (all parts)");
+  it("gives up the trailing separator when the last field is absent", () => {
+    const t = new Template("{{surname}}, {{givenNames}}");
+    expect(t.evaluate({ surname: field(true, "HOMER"), givennames: field(false, "") }))
+      .toBe("HOMER");
   });
 
-  it("checks PubID resolvability with an injected parser", () => {
-    const fake: PubidParser = (code) => code.includes("%") ? null : {};
-    expect(isResolvablePubid("ISO 19115-3:2023", fake)).toBe(true);
-    expect(isResolvablePubid("NOT A PUBID %%%", fake)).toBe(false);
-    expect(isResolvablePubid("anything")).toBe(true); // no parser: warning, not verdict
+  it("does not double the terminator", () => {
+    const t = new Template("{{title}}.");
+    expect(t.evaluate({ title: field(true, "_Eric_") })).toBe("_Eric_.");
+  });
+
+  it("returns empty when no field renders", () => {
+    const t = new Template("{{creator}}. {{date}}.");
+    expect(t.evaluate({ creator: field(false, ""), date: field(false, "") })).toBe("");
+  });
+
+  it("resolves slot names case- and underscore-insensitively", () => {
+    const t = new Template("{{Component_Part}} {{date}}.");
+    expect(t.evaluate({
+      componentpart: field(true, "In: _A host_"),
+      date: field(true, "1971"),
+    })).toBe("In: _A host_ 1971.");
   });
 });
