@@ -374,7 +374,7 @@ export function renderCitation(
   disambiguator = "",
 ): string {
   const fields = buildFields(new Ctx(rec, style, i18n), disambiguator);
-  return new Template(style.templates.citation).evaluate(fields);
+  return new Template(style.templates.citation ?? "").evaluate(fields);
 }
 
 function kindName(rec: Rec): string {

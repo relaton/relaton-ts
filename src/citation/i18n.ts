@@ -63,8 +63,10 @@ export class I18n {
     return this.punct[key] ?? fallback;
   }
 
-  /** Style-instance localized strings win over the language pack. */
-  overlay(locale: Record<string, string | undefined>): this {
+  /** Style-instance localized strings win over the language pack: the
+   * named connective attributes map to their label keys, then the
+   * arbitrary labels and punctuation hashes merge verbatim. */
+  overlay(locale: Record<string, unknown>): this {
     const labelFor: Record<string, string> = {
       and: "and",
       others: "others",
@@ -76,7 +78,19 @@ export class I18n {
     };
     for (const [key, label] of Object.entries(labelFor)) {
       const v = locale[key];
-      if (typeof v === "string") this.labels[label] = v;
+      if (typeof v === "string" && v !== "") this.labels[label] = v;
+    }
+    const labels = locale.labels;
+    if (labels && typeof labels === "object") {
+      for (const [k, v] of Object.entries(labels as Record<string, unknown>)) {
+        if (typeof v === "string") this.labels[k] = v;
+      }
+    }
+    const punct = locale.punct;
+    if (punct && typeof punct === "object") {
+      for (const [k, v] of Object.entries(punct as Record<string, unknown>)) {
+        if (typeof v === "string") this.punct[k] = v;
+      }
     }
     return this;
   }
