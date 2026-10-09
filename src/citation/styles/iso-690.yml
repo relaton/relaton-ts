@@ -22,6 +22,7 @@ scheme:
     class: NameFormRules
     initials: false
     givenNameFirst: false
+    surnameUpcase: true
 templates:
   class: TemplateMap
   titleOpen: "_"
