@@ -12,11 +12,12 @@ describe("toChicago", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     const s = toChicago(parsed.item);
-    expect(s).toContain("International Hydrographic Organization.");
-    expect(s).toContain("2003.");
-    expect(s).toMatch(/B-10\./);
-    expect(s).toContain("The History of GEBCO");
-    expect(s).toMatch(/\.$/);
+    // the canonical Chicago pack: organizations verbatim, quoted
+    // report titles, production then trailing year
+    expect(s).toMatch(/^International Hydrographic Organization \(IHO\)/);
+    expect(s).toContain(`"The History of GEBCO"`);
+    expect(s).toContain("5th ed.");
+    expect(s).toMatch(/International Hydrographic Organization, 2003\.$/);
   });
 
   it("renders a book with natural-order author names", () => {
@@ -32,7 +33,10 @@ describe("toChicago", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     const s = toChicago(parsed.item);
-    expect(s).toMatch(/^Jane Austen\. 2002\. Pride and Prejudice\. Penguin\.$/);
+    // monographs italicize; the year trails the production
+    expect(s).toBe(
+      "Jane Austen. <em>Pride and Prejudice</em>. Penguin, 2002.",
+    );
   });
 });
 
@@ -42,8 +46,7 @@ describe("toApa", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     const s = toApa(parsed.item);
-    expect(s).toContain("(2003).");
-    expect(s).toMatch(/The History of GEBCO.*\(B-10\)\./);
+    expect(s).toMatch(/^B-10\. \(2003\)\. The History of GEBCO/);
   });
 
   it("renders person authors in Family, Initials form", () => {
@@ -59,6 +62,8 @@ describe("toApa", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     const s = toApa(parsed.item);
-    expect(s).toMatch(/^Austen, J\. \(2002\)\. Pride and Prejudice\. Penguin\.$/);
+    expect(s).toBe(
+      "Austen, J. (2002). <em>Pride and Prejudice</em>. Penguin.",
+    );
   });
 });
