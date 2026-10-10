@@ -15,6 +15,7 @@ scheme:
     givenNameFirst: false
     editorsMarked: false
     surnameUpcase: false
+    orgUpcase: false
     subsequentSurnameUpcase: false
   locale:
     "in": "In"
@@ -33,7 +34,7 @@ perType:
     home: true
     template: "{{title}}"
   - type: report
-    template: "{{identifier}}. {{title}}. {{production}}."
+    template: "{{identifier}}. ({{date}}). {{title}}. {{production}}."
   - type: monograph
     title: "<em>{{title}}</em>"
     template: "{{creator}} ({{date}}). {{title}}. {{production}}."

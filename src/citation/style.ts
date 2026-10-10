@@ -167,10 +167,26 @@ export class Style {
     return this.typeTemplateFor(kind)?.fallbacks?.[slot];
   }
 
+  /** The kind's declared title form, when any entry of the kind
+   * carries one (a home variant may shadow: the declaring entry wins) */
+  titleFormFor(kind: string): string | undefined {
+    const declared = this.perType.find(
+      (t) => t.type === kind && (t.title ?? "") !== "",
+    );
+    return declared?.title;
+  }
+
   private typeTemplateFor(kind: string, home?: boolean): TypeTemplate | undefined {
     const candidates = this.perType.filter((t) => t.type === kind);
-    if (candidates.length > 1 && home !== undefined) {
-      return candidates.find((t) => (t.home ?? false) === home);
+    // an external item never takes the home pattern: with home
+    // variants present, home === false selects the external entry;
+    // an undefined home falls back to the first entry of the kind
+    if (candidates.length > 1 && home === true) {
+      return candidates.find((t) => t.home ?? false);
+    }
+    if (candidates.length > 1 && home === false) {
+      const external = candidates.find((t) => !(t.home ?? false));
+      if (external) return external;
     }
     return candidates[0];
   }

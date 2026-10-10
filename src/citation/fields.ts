@@ -6,6 +6,7 @@
 // (Port of relaton-render's Iso690::Fields and Elements.)
 
 import { field, Template, type Field } from "./template.js";
+import { resolveRules, type SlotRenderer } from "./rules.js";
 import { kindFor } from "./kinds.js";
 import type { Style } from "./style.js";
 import type { I18n } from "./i18n.js";
@@ -27,6 +28,8 @@ export interface Rec {
   accesslocation?: unknown;
   docnumber?: unknown;
   relation?: { type?: string; description?: unknown; bibitem?: Rec }[];
+  extent?: { locality?: { type?: string; referenceFrom?: unknown; referenceTo?: unknown }[] }[];
+  status?: { stage?: { content?: unknown }; iteration?: unknown };
 }
 
 function asArray<T>(v: T | T[] | undefined | null): T[] {
@@ -55,7 +58,7 @@ const IDENTIFIER_KINDS: Record<string, (content: string) => string> = {
   MRN: (c) => c,
 };
 
-class Ctx {
+export class Ctx {
   constructor(
     readonly rec: Rec,
     readonly style: Style,
@@ -101,7 +104,13 @@ class Ctx {
 
   orgName(c: NonNullable<Rec["contributor"]>[number]): string {
     const org = c.organization ?? {};
-    const name = asArray(org.name).map((n) => contentOf(n).toUpperCase())
+    // the name-and-date convention upcases organization creators; a
+    // style declares orgUpcase: false to cite them verbatim (Chicago,
+    // APA cite organizations in normal case)
+    const upcase = (this.style.nameForm as Record<string, unknown>)
+      .orgUpcase !== false;
+    const name = asArray(org.name)
+      .map((n) => upcase ? contentOf(n).toUpperCase() : contentOf(n))
       .filter(Boolean).join(", ");
     const abbrev = contentOf(org.abbreviation);
     if (name === "" || abbrev === "") return name;
@@ -155,7 +164,20 @@ class CreatorElement {
     const person = c.person;
     if (!person) return this.ctx.orgName(c);
     const complete = this.ctx.completenameOf(person);
-    if (complete) return complete;
+    // a completename under an all-inverting form splits into its
+    // Family, Initials shape ("Jane Austen" -> "Austen, J.")
+    if (complete) {
+      if ((this.ctx.style.nameForm as Record<string, unknown>).invertedAll === true) {
+        const parts = complete.trim().split(/\s+/);
+        if (parts.length >= 2) {
+          const family = parts[parts.length - 1] ?? "";
+          const initials = parts.slice(0, -1)
+            .map((w) => `${(w[0] ?? "").toUpperCase()}.`).join(" ");
+          return `${family}, ${initials}`;
+        }
+      }
+      return complete;
+    }
     const surname = this.ctx.surnameOf(person);
     const given = this.ctx.givenOf(person);
     let name: string;
@@ -220,7 +242,16 @@ function yearOfDate(d: { at?: unknown; from?: unknown; to?: unknown; on?: unknow
   return raw.match(/\d{4}/)?.[0] ?? "";
 }
 
-function buildFields(ctx: Ctx, disambiguator: string): Record<string, Field> {
+function buildFields(
+  ctx: Ctx,
+  disambiguator: string,
+  overrides: Partial<Record<string, SlotRenderer>> = {},
+): Record<string, Field> {
+  const byRule = (slot: string, base: Field): Field => {
+    const fn = overrides[slot];
+    if (!fn) return base;
+    return fn(ctx as never) ?? base;
+  };
   const i18n = ctx.i18n;
   const style = ctx.style;
   const rec = ctx.rec;
@@ -230,9 +261,14 @@ function buildFields(ctx: Ctx, disambiguator: string): Record<string, Field> {
 
   const titles = asArray(rec.title);
   const mainTitle = titleOf(ctx);
+  // a kind's title form carries the whole emphasis (the perType
+  // `title:` declaration), falling back to the style-wide marks
+  const kindTitleForm = style.titleFormFor(kindFor(rec.type));
   const title = mainTitle === ""
     ? field(false, "")
-    : field(true, `${style.titleOpen}${mainTitle}${style.titleClose}`);
+    : field(true, kindTitleForm
+      ? kindTitleForm.replace("{{title}}", mainTitle)
+      : `${style.titleOpen}${mainTitle}${style.titleClose}`);
 
   const editionNum = parseInt(contentOf(rec.edition), 10);
   const edition = Number.isNaN(editionNum) || editionNum === 0
@@ -277,8 +313,12 @@ function buildFields(ctx: Ctx, disambiguator: string): Record<string, Field> {
     const dash = i18n.label("date_range");
     if (contentOf(published.from) !== "" && contentOf(published.to) !== "") {
       date = field(true, `${yearOfDate(published)}${dash}${yearOfDate({ to: published.to })}`);
-    } else if (contentOf(published.from) !== "") {
+    } else if (contentOf(published.from) !== "" &&
+      ["continuing", "serial_part", "online", "webdoc"]
+        .includes(kindFor(rec.type))) {
       date = field(true, `${yearOfDate(published)}${dash}`);
+    } else if (contentOf(published.from) !== "") {
+      date = field(true, yearOfDate(published));
     } else {
       const y = yearOfDate(published);
       date = y === "" ? field(false, "") : field(true, y);
@@ -330,18 +370,44 @@ function buildFields(ctx: Ctx, disambiguator: string): Record<string, Field> {
   const surname = creator.inText();
   const given = creator.principalGiven();
 
+  // bases the rules may replace: the status, the authorizer, the
+  // extent (volume/page localities)
+  const statusBase = (() => {
+    const stage = contentOf(rec.status?.stage?.content);
+    return stage === "" ? field(false, "") : field(true, stage);
+  })();
+  const authorizerBase = (() => {
+    const name = ctx.contributors("authorizer").map((x) =>
+      asArray(x.organization?.name).map(contentOf).filter(Boolean).join(", "),
+    ).find(Boolean);
+    return name ? field(true, name) : field(false, "");
+  })();
+  const extentBase = (() => {
+    const locs = asArray(asArray(rec.extent)[0]?.locality);
+    const parts = locs.filter(Boolean).map((l) => {
+      const from = contentOf(l.referenceFrom);
+      const to = contentOf(l.referenceTo);
+      const range = to === "" || to === from ? from : `${from}${i18n.label("date_range")}${to}`;
+      return l.type ? `${l.type} ${range}` : range;
+    });
+    return parts.length === 0 ? field(false, "") : field(true, parts.join(", "));
+  })();
+
   return {
-    creator: field(creator.present && creatorText !== "", creatorText),
+    creator: byRule("creator", field(creator.present && creatorText !== "", creatorText)),
     title,
-    edition,
-    medium,
-    series,
-    production,
-    date,
+    edition: byRule("edition", edition),
+    medium: byRule("medium", medium),
+    series: byRule("series", series),
+    production: byRule("production", production),
+    date: byRule("date", date),
     numeration,
-    componentpart: componentPart,
-    identifier,
-    location,
+    componentpart: byRule("componentpart", componentPart),
+    identifier: byRule("identifier", identifier),
+    location: byRule("location", location),
+    status: byRule("status", statusBase),
+    authorizer: byRule("authorizer", authorizerBase),
+    extent: byRule("extent", extentBase),
     surname: field(surname !== "", surname),
     givennames: field(given !== "", given),
     disambiguator: field(disambiguator !== "", disambiguator),
@@ -359,8 +425,9 @@ export function renderReference(
   style: Style,
   i18n: I18n,
 ): string {
-  const fields = buildFields(new Ctx(rec, style, i18n), "");
-  const out = new Template(style.templateFor(kindName(rec))).evaluate(fields);
+  const fields = buildFields(new Ctx(rec, style, i18n), "", resolveRules(style.rules));
+  const out = new Template(style.templateFor(kindName(rec), homeDocid(rec, style)))
+    .evaluate(fields);
   if (out.trim() === "") {
     throw new Error("no renderable elements");
   }
@@ -373,12 +440,23 @@ export function renderCitation(
   i18n: I18n,
   disambiguator = "",
 ): string {
-  const fields = buildFields(new Ctx(rec, style, i18n), disambiguator);
+  const fields = buildFields(
+    new Ctx(rec, style, i18n),
+    disambiguator,
+    resolveRules(style.rules),
+  );
   return new Template(style.templates.citation ?? "").evaluate(fields);
 }
 
 function kindName(rec: Rec): string {
   return kindFor(rec.type);
+}
+
+/** A home designation (the scheme's homeDocidType list) marks the
+ * item for its home pattern; without a declared list no item is home */
+function homeDocid(rec: Rec, style: Style): boolean {
+  const types = style.scheme.homeDocidType ?? [];
+  return asArray(rec.docidentifier).some((d) => types.includes(d.type ?? ""));
 }
 
 export { Template, field };
