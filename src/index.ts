@@ -69,4 +69,5 @@ export { toChicago, toApa } from "./cite_styles.js";
 export { toBibtex } from "./bibtex.js";
 export { toRis } from "./ris.js";
 export { toCslJson } from "./csl.js";
+export { toJsonLd } from "./jsonld.js";
 export { fetchEntry, fetchDocid, isResolvablePubid } from "./cite.js";
