@@ -58,7 +58,9 @@ export function toCslJson(item: RelatonItem): string {
   for (const c of asArray(rec.contributor as AnyRec[])) {
     const roles = asArray(c.role as AnyRec[]).map((r) =>
       String(contentOf(r) || r?.type));
-    const fields = roles.map((r) => CSL_ROLE[r]).filter(Boolean);
+    const fields = roles
+      .map((r) => CSL_ROLE[r])
+      .filter((f): f is string => Boolean(f));
     if (!fields.length) continue;
 
     let person: AnyRec | undefined;
