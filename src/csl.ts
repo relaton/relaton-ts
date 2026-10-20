@@ -47,26 +47,39 @@ export function toCslJson(item: RelatonItem): string {
   const title = contentOf(rec.title);
   if (title) out.title = title;
 
-  const authors: AnyRec[] = [];
+  const contributors: Record<string, AnyRec[]> = {};
+  // CSL has separate fields for these roles; collapsing an editor into
+  // `author` would attribute the work to the wrong people in every consumer.
+  const CSL_ROLE: Record<string, string> = {
+    author: "author",
+    editor: "editor",
+    performer: "performer",
+  };
   for (const c of asArray(rec.contributor as AnyRec[])) {
-    const role = asArray(c.role as AnyRec[]).map((r) => contentOf(r) || r?.type);
-    const isAuthorish = role.some((r) => ["author", "performer", "editor"].includes(String(r)));
-    if (!isAuthorish) continue;
+    const roles = asArray(c.role as AnyRec[]).map((r) =>
+      String(contentOf(r) || r?.type));
+    const fields = roles.map((r) => CSL_ROLE[r]).filter(Boolean);
+    if (!fields.length) continue;
+
+    let person: AnyRec | undefined;
     if (c.person) {
       const given = contentOf(c.person.name?.given);
       const family = contentOf(c.person.name?.surname);
       const complete = contentOf(c.person.name?.completename);
-      if (family || complete) {
-        authors.push(family
-          ? { family, ...(given ? { given } : {}) }
-          : { literal: complete });
+      if (family) {
+        person = { family, ...(given ? { given } : {}) };
+      } else if (complete) {
+        person = { literal: complete };
       }
     } else if (c.organization) {
       const name = contentOf(c.organization.name) || contentOf(c.organization.abbreviation);
-      if (name) authors.push({ literal: name });
+      if (name) person = { literal: name };
     }
+    if (!person) continue;
+
+    for (const field of fields) (contributors[field] ||= []).push(person);
   }
-  if (authors.length) out.author = authors;
+  for (const [field, people] of Object.entries(contributors)) out[field] = people;
 
   let year = "";
   for (const d of asArray(rec.date as AnyRec[])) {
@@ -85,6 +98,13 @@ export function toCslJson(item: RelatonItem): string {
   if (publisherName) out.publisher = publisherName;
 
   if (primary) out.number = primary;
+  for (const [docType, field] of [
+    ["DOI", "DOI"], ["ISBN", "ISBN"], ["ISSN", "ISSN"],
+  ] as const) {
+    const hit = docids.find((d) => String(d.type ?? "").toUpperCase() === docType);
+    const value = hit ? contentOf(hit) : "";
+    if (value) out[field] = value;
+  }
   const edition = contentOf(rec.edition);
   if (edition) out.edition = edition;
   const lang = asArray(rec.language).map(String).find(Boolean);
