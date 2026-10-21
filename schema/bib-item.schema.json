@@ -1661,7 +1661,8 @@
           ],
           "enum": [
             "main",
-            "alt"
+            "alt",
+            "stream"
           ]
         },
         "formattedref": {
