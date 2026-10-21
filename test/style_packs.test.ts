@@ -2,11 +2,15 @@
 // style_spec: extends resolution, the delta merge semantics, and the
 // pack taxonomy selection.
 
-import { describe, expect, it } from "vitest";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { describe, expect, it, beforeAll } from "vitest";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Style } from "../src/citation/style.js";
+import { Style, setStyleFileLoader } from "../src/citation/style.js";
+
+beforeAll(() => {
+  setStyleFileLoader((path) => readFileSync(path, "utf8"));
+});
 
 function writePack(name: string, yaml: string): string {
   const path = join(mkdtempSync(join(tmpdir(), "packs-")), `${name}.yml`);
