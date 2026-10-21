@@ -1,12 +1,18 @@
 // The named-rule registry: pack selections override slot builders —
 // the mirror of relaton-render's rules_spec cases.
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeAll } from "vitest";
+import { readFileSync } from "node:fs";
 import { resolveRules, REGISTRY } from "../src/citation/rules";
+import { setStyleFileLoader } from "../src/citation/style";
 import { renderIso690Reference } from "../src/citation/render";
 import { parseItem } from "../src/index";
 function parseItem2(v: unknown): unknown { return v; }
 const parseOk = (v: unknown): unknown => v;
+
+beforeAll(() => {
+  setStyleFileLoader((path) => readFileSync(path, "utf8"));
+});
 
 function render(item: unknown, rules: Record<string, string>, template: string): string {
   return renderIso690Reference(item as never, {

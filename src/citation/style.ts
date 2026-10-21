@@ -7,12 +7,10 @@
 // relaton-render's Iso690::Style#merge_delta. (Port of relaton-render's
 // Iso690::Style.)
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { parse } from "yaml";
 import { Template, field, type Field } from "./template.js";
 import { kindFor } from "./kinds.js";
+import { BUNDLED_STYLE_SOURCES } from "./styles.generated.js";
 
 export interface NameForm {
   initials?: boolean;
@@ -351,14 +349,27 @@ function namedFrom(locale: Locale): Record<string, string> {
   return out;
 }
 
+// Node-only file loading is injected (setStyleFileLoader): the runtime reads
+// the bundled packs from styles.generated.js and never touches node:fs, so
+// Worker bundles carry no node builtins.
+let styleFileLoader: ((path: string) => string) | null = null;
+
+/** Registers a file loader for pack paths (Node callers; readFileSync). */
+export function setStyleFileLoader(loader: (path: string) => string): void {
+  styleFileLoader = loader;
+}
+
 function readStyleSource(nameOrPath: string): string {
   if (nameOrPath.includes("/") && nameOrPath.endsWith(".yml")) {
-    return readFileSync(nameOrPath, "utf8");
+    if (!styleFileLoader) {
+      throw new Error(
+        `loading a style pack from a file path needs setStyleFileLoader ` +
+          `(Node); bundled packs load by name`,
+      );
+    }
+    return styleFileLoader(nameOrPath);
   }
-  const dir = join(dirname(fileURLToPath(import.meta.url)), "styles");
-  try {
-    return readFileSync(join(dir, `${nameOrPath}.yml`), "utf8");
-  } catch {
-    throw new Error(`unknown style ${nameOrPath}`);
-  }
+  const bundled = BUNDLED_STYLE_SOURCES[nameOrPath];
+  if (bundled !== undefined) return bundled;
+  throw new Error(`unknown style ${nameOrPath}`);
 }

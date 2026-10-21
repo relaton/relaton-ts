@@ -1,13 +1,13 @@
 {
   "name": "relaton",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "TypeScript implementation of the Relaton bibliographic model — YAML/XML/AsciiBib/ISO 690 serializations and Metanorma citation utilities on @pubid/pubid",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "export:schema": "bundle exec ruby tools/export_schema.rb",
     "generate": "tsx tools/codegen.ts",
-    "build": "tsc",
+    "build": "node tools/gen-styles.mjs && tsc",
     "test": "vitest run",
     "prepublishOnly": "npm run build"
   },
