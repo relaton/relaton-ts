@@ -743,7 +743,7 @@ export const BibItemBase: z.ZodType<BibItemBase> = z.lazy(() =>
   }).strict());
 
 export type BibSeries = {
-  "type"?: "main" | "alt" | null;
+  "type"?: "main" | "alt" | "stream" | null;
   "formattedref"?: BibFormattedref;
   "title"?: BibTitle[];
   "place"?: BibPlace;
@@ -758,7 +758,7 @@ export type BibSeries = {
 
 export const BibSeries: z.ZodType<BibSeries> = z.lazy(() =>
   z.object({
-    "type": z.enum(["main", "alt"]).nullable().optional(),
+    "type": z.enum(["main", "alt", "stream"]).nullable().optional(),
     "formattedref": z.lazy(() => BibFormattedref).optional(),
     "title": z.array(z.lazy(() => BibTitle)).optional(),
     "place": z.lazy(() => BibPlace).optional(),

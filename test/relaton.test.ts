@@ -46,12 +46,20 @@ describe("validation", () => {
   it("rejects an invalid series type", () => {
     const result = parseItem({
       docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
-      series: [{ type: "stream", title: [{ content: "Legacy" }] }],
+      series: [{ type: "collection", title: [{ content: "Nope" }] }],
     });
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(JSON.stringify(result.errors)).toMatch(/series/i);
     }
+  });
+
+  it("accepts the IETF stream series type (relaton#342)", () => {
+    const result = parseItem({
+      docidentifier: [{ content: "RFC 1", type: "IETF", primary: true }],
+      series: [{ type: "stream", title: [{ content: "IETF" }] }],
+    });
+    expect(result.ok).toBe(true);
   });
 
   it("rejects an out-of-enum ext.stream", () => {

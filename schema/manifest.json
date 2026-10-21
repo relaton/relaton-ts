@@ -1,7 +1,7 @@
 {
   "source": "relaton/relaton",
-  "ref": "3746f41822e9bcf9e959d68ad3e0a13ee195f2b1",
-  "lutaml_model_version": "0.8.76",
+  "ref": "cce25af56b8f60f05ccd8f625ba39dd2d52f824b",
+  "lutaml_model_version": "0.8.119",
   "roots": [
     "schema/bib-item.schema.json",
     "schema/ietf-item.schema.json"
