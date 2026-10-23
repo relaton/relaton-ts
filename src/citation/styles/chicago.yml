@@ -18,8 +18,8 @@ scheme:
     editorsMarked: true
     loneEditorMarked: true
     surnameUpcase: false
+    subsequentSurnameUpcase: true
     orgUpcase: false
-    subsequentSurnameUpcase: false
   locale:
     "in": "in"
     labels:
