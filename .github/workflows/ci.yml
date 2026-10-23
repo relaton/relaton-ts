@@ -23,6 +23,8 @@ jobs:
           node-version: "22"
           cache: npm
 
+      - name: Clone the citation testsuite
+        run: git clone --depth 1 https://github.com/relaton/citation-testsuite.git ../citation-testsuite
       - run: npm ci
 
       # The committed schema artifact must match what the pinned relaton
