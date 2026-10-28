@@ -192,6 +192,16 @@ class CreatorElement {
   private join(names: string[]): string {
     const and = this.ctx.i18n.label("and");
     if (names.length === 0) return "";
+    // The name form's et-al collapse: from etalCount creators on, only the
+    // leading etalDisplay names render, followed by the locale's "others"
+    // label with the list separator ("Fielding, Roy, et al." — MLA 9th).
+    const etalCount = this.ctx.style.nameForm.etalCount;
+    if (etalCount !== undefined && names.length >= etalCount) {
+      const shown = Math.max(1, this.ctx.style.nameForm.etalDisplay ?? 1);
+      const lead = names.slice(0, shown).join(", ");
+      const others = this.ctx.i18n.label("others");
+      return others === "" ? lead : `${lead}, ${others}`;
+    }
     if (names.length === 1) return names[0] ?? "";
     if (names.length === 2) return names.join(` ${and} `);
     const oxford = this.ctx.i18n.label("oxford_comma");
