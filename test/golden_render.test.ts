@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { toIso690 } from "../src/iso690";
-import { toChicago, toApa } from "../src/cite_styles";
+import { toChicago, toApa, toMla } from "../src/cite_styles";
 import type { RelatonItem } from "../src/index.js";
 
 // Golden render corpus: one representative record per SDO, rendered in the
@@ -19,6 +19,7 @@ const STYLES = {
   iso690: toIso690,
   chicago: toChicago,
   apa: toApa,
+  mla: toMla,
 } as const;
 
 describe("citation render corpus (citation-testsuite)", () => {

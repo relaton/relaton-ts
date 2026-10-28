@@ -46,9 +46,23 @@ export class Template {
     if (rendered.length === 0) return "";
     let body = "";
     rendered.forEach(([head, text, tail], i) => {
-      body += i === rendered.length - 1 ? head + text : head + text + tail;
+      if (i === rendered.length - 1) {
+        body += head + text;
+        return;
+      }
+      body += head + text + this.collapse(text, tail);
     });
     return this.terminate(body).trimEnd();
+  }
+
+  // A field that already ends in a period gives up the literal's own
+  // leading period ("Fielding, Roy, et al." + ". {{title}}" — the label
+  // closed its sentence), the same surrender terminate() makes at the end.
+  private collapse(text: string, tail: string): string {
+    if (text.trimEnd().endsWith(".") && tail.startsWith(".") && !tail.startsWith("..")) {
+      return tail.replace(/^\./, "");
+    }
+    return tail;
   }
 
   private terminate(body: string): string {

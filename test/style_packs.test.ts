@@ -21,7 +21,7 @@ function writePack(name: string, yaml: string): string {
 describe("Style.load", () => {
   it("loads every canonical pack", () => {
     for (const name of [
-      "author-date", "lncs", "chicago", "ieee-sa", "apa", "jis-en", "jis-ja",
+      "author-date", "lncs", "chicago", "ieee-sa", "apa", "mla", "jis-en", "jis-ja",
     ]) {
       expect(Style.load(name).name).not.toBe("");
     }
