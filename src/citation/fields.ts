@@ -223,11 +223,16 @@ class CreatorElement {
 
 function titleOf(ctx: Ctx): string {
   const titles = asArray(ctx.rec.title).filter((t) => contentOf(t) !== "");
-  // one citation language: English preferred, else first seen
-  const langOf = (t: { language?: string }) => (t.language ?? "").toLowerCase();
-  const langs = [...new Set(titles.map(langOf).filter(Boolean))];
-  const lang = langs.includes("en") ? "en" : langs[0] ?? "";
-  const ours = lang !== "" ? titles.filter((t) => langOf(t) === lang) : titles;
+  // one citation language: the variants declared in the render
+  // language, else all of them (the Ruby titles_in_lang semantics —
+  // not an en preference)
+  const lang = ctx.i18n.lang.toLowerCase();
+  const langOf = (t: { language?: string | string[] }): string[] => {
+    const langs = Array.isArray(t.language) ? t.language : [t.language];
+    return langs.filter((l): l is string => typeof l === "string").map((l) => l.toLowerCase());
+  };
+  const inLang = lang === "" ? [] : titles.filter((t) => langOf(t).includes(lang));
+  const ours = inLang.length > 0 ? inLang : titles;
 
   // decomposed titles (intro/main/part) compose; a lone composite
   // type:"main" stands alone; otherwise the first title
@@ -245,6 +250,44 @@ function ordinal(n: number): string {
   if (n % 100 >= 11 && n % 100 <= 13) return `${n}th`;
   return `${n}${["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 }
+
+// A locale template carrying {{ var1 }} (optionally through the
+// ordinal_word filter) populated with the number; a bare label (no
+// placeholder) is not a template. The mirror of the Ruby
+// Elements::Edition#locale_template.
+function localeTemplate(i18n: I18n, key: string, value: number): string | null {
+  const raw = i18n.label(key);
+  if (raw === key || !raw.includes("{{")) return null;
+  if (raw.includes("ordinal_word")) {
+    const word = i18n.label(`ordinal_word_${value}`);
+    return raw.replace(
+      /\{\{\s*var1[^}]*\}\}/g,
+      word === `ordinal_word_${value}` ? ordinal(value) : word,
+    );
+  }
+  return raw.replace(/\{\{\s*var1\s*\}\}/g, String(value));
+}
+
+// The edition cascade (ISO 690 clause 7.6, the port of
+// Elements::Edition#render): worded forms first ("first edition",
+// 第1版), then the ordinal template, the cardinal last — a specific
+// label outranks a template that would apply to any number. Worded
+// editions are document editions (a standard included); other kinds
+// read as "version N".
+function editionForm(i18n: I18n, num: number, kind: string): string {
+  if (!WORD_EDITION_KINDS.includes(kind)) {
+    return `${i18n.label("version")} ${num}`;
+  }
+  const word = i18n.label(`edition_${num}`);
+  if (word !== `edition_${num}`) return word;
+  const ord = localeTemplate(i18n, "edition_ordinal", num);
+  if (ord) return ord;
+  return localeTemplate(i18n, "edition_cardinal", num) ??
+    localeTemplate(i18n, "version_cardinal", num) ??
+    `${ordinal(num)} ${i18n.label("edition")}`;
+}
+
+const WORD_EDITION_KINDS = ["monograph", "component_part", "serial_part", "report"];
 
 function yearOfDate(d: { at?: unknown; from?: unknown; to?: unknown; on?: unknown }): string {
   const raw = contentOf(d.at) || contentOf(d.from) || contentOf(d.on) ||
@@ -273,7 +316,8 @@ function buildFields(
   const mainTitle = titleOf(ctx);
   // a kind's title form carries the whole emphasis (the perType
   // `title:` declaration), falling back to the style-wide marks
-  const kindTitleForm = style.titleFormFor(kindFor(rec.type));
+  const kind = kindFor(rec.type);
+  const kindTitleForm = style.titleFormFor(kind);
   const title = mainTitle === ""
     ? field(false, "")
     : field(true, kindTitleForm
@@ -283,7 +327,7 @@ function buildFields(
   const editionNum = parseInt(contentOf(rec.edition), 10);
   const edition = Number.isNaN(editionNum) || editionNum === 0
     ? field(false, "")
-    : field(true, `${ordinal(editionNum)} ${i18n.label("edition")}`);
+    : field(true, editionForm(i18n, editionNum, kind));
 
   const mediumText = contentOf(rec.medium);
   const medium = mediumText === "" ? field(false, "") : field(true, `[${mediumText}]`);

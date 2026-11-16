@@ -39,6 +39,50 @@ export const PACKS: Record<string, LangPack> = {
     },
     punct: { production_sep: " : " },
   },
+  // The port of relaton-render's i18n/ja.yml: the CJK labels, the
+  // 第N版 cardinal/ordinal templates the edition cascade consumes, and
+  // the CJK punctuation set.
+  ja: {
+    labels: {
+      edition: "版",
+      size_volume: "巻",
+      size_page: "頁",
+      page: "%頁",
+      pages: "%頁",
+      volume: "巻%",
+      issue: "%号",
+      version: "版",
+      viewed: "閲覧",
+      series_no: "番号",
+      report_no: "報告番号",
+      available_from: "入手先：",
+      at_url: "URL：",
+      in: "収録：",
+      ed: "編",
+      eds: "編",
+      updated: "更新",
+      no_place: "出版地不明",
+      edition_cardinal: "第{{ var1 }}版",
+      edition_ordinal: "第{{ var1 }}版",
+      version_cardinal: "第{{ var1 }}版",
+      in_series: "シリーズ",
+      list_separator: "、 ",
+      and: "",
+      oxford_comma: "",
+      date_range: "〜",
+    },
+    punct: {
+      "size-join": "",
+      "marker-space": "",
+      production_sep: "： ",
+      "cjk-latin-separator": "、 ",
+      period: "。",
+      comma: "、",
+      colon: "：",
+      "open-paren": "（",
+      "close-paren": "）",
+    },
+  },
 };
 
 export class I18n {

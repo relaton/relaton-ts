@@ -15,12 +15,14 @@ const FIXTURE_DIR =
   process.env["CITATION_TESTSUITE_DIR"] ??
   path.resolve(import.meta.dirname, "../../../../citation-testsuite");
 
-const STYLES = {
+const STYLES: Record<string, (rec: RelatonItem) => string> = {
   iso690: toIso690,
   chicago: toChicago,
   apa: toApa,
   mla: toMla,
-} as const;
+  "jis-en": (rec) => toIso690(rec, { style: "jis-en" }),
+  "jis-ja": (rec) => toIso690(rec, { style: "jis-ja", lang: "ja" }),
+};
 
 describe("citation render corpus (citation-testsuite)", () => {
   if (!existsSync(path.join(FIXTURE_DIR, "records"))) {
@@ -33,7 +35,7 @@ describe("citation render corpus (citation-testsuite)", () => {
   }
 
   const names = readFileSync(path.join(FIXTURE_DIR, "README.adoc"), "utf8")
-    ? ["iec", "ieee", "ietf", "iso", "itu", "nist"]
+    ? ["iec", "ieee", "ietf", "iso", "itu", "nist", "jis"]
     : [];
 
   for (const name of names) {
@@ -45,6 +47,7 @@ describe("citation render corpus (citation-testsuite)", () => {
     ) as Record<string, string>;
 
     for (const [style, render] of Object.entries(STYLES)) {
+      if (!(style in golden)) continue;
       it(`${name} renders in ${style}`, () => {
         expect(render(record)).toBe(golden[style]);
       });
