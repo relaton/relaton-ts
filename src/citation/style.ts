@@ -65,6 +65,11 @@ export interface TypeTemplate {
   title?: string;
   noPlace?: boolean;
   fallbacks?: Record<string, string>;
+  /** per-kind slot forms: the pattern the slot renders through
+   * (", {{production}}"), the mirror of Ruby's TypeTemplate */
+  series?: string;
+  production?: string;
+  authorizer?: string;
 }
 
 export interface SortKey {

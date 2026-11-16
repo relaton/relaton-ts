@@ -357,7 +357,15 @@ function buildFields(
     places.join("; "),
     publishers.join("; "),
   ].filter(Boolean).join(i18n.punctFetch("production_sep", ": "));
-  const production = productionText === "" ? field(false, "") : field(true, productionText);
+  // the kind's declared form for this slot (", {{production}}"): the
+  // first variant of the kind carrying one — the mirror of Ruby's
+  // Elements::Production#production_form
+  const prodForm = (style.perType ?? []).find(
+    (t) => t.type === kind && (t.production ?? "") !== "",
+  )?.production;
+  const production = productionText === ""
+    ? field(false, "")
+    : field(true, prodForm ? prodForm.replace("{{production}}", productionText) : productionText);
 
   const dates = asArray(rec.date);
   const published = dates.find((d) => d.type === "published" || d.type === "issued") ??
@@ -434,7 +442,12 @@ function buildFields(
     const name = ctx.contributors("authorizer").map((x) =>
       asArray(x.organization?.name).map(contentOf).filter(Boolean).join(", "),
     ).find(Boolean);
-    return name ? field(true, name) : field(false, "");
+    // the kind's declared form (". {{authorizer}}") wraps a present slot
+    const form = (style.perType ?? []).find(
+      (t) => t.type === kind && (t.authorizer ?? "") !== "",
+    )?.authorizer;
+    if (!name) return field(false, "");
+    return field(true, form ? form.replace("{{authorizer}}", name) : name);
   })();
   const extentBase = (() => {
     const locs = asArray(asArray(rec.extent)[0]?.locality);
