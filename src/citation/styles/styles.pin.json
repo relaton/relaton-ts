@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "repo": "relaton/relaton",
+      "ref": "653b1fad2cabbaea47487b5520972c04ffde7618",
+      "path": "lib/relaton/render/iso690/styles",
+      "note": "the engine-format packs; the reference engine"
+    }
+  ],
+  "fetched": "2026-11-24",
+  "note": "iso-690.yml stays a vendored executable port of the LML canonical (relaton-models citation/styles/): the canonical dropped surnameUpcase while the executable engines still render from it — consuming the LML instance today breaks the goldens. The LML-canonical-as-source switch is relaton-ts#30 step 2 (lutaml-model#1033)."
+}
