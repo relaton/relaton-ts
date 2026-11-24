@@ -1,8 +1,48 @@
 {
-  "export:schema": "bundle exec ruby tools/export_schema.rb",
-  "generate": "tsx tools/codegen.ts",
-  "build": "node tools/gen-styles.mjs && tsc",
-  "update-styles": "node tools/fetch-styles.mjs && node tools/gen-styles.mjs",
-  "test": "vitest run",
-  "prepublishOnly": "npm run build"
+  "name": "relaton",
+  "version": "0.1.6",
+  "description": "TypeScript implementation of the Relaton bibliographic model \u2014 YAML/XML/AsciiBib/ISO 690 serializations and Metanorma citation utilities on @pubid/pubid",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "export:schema": "bundle exec ruby tools/export_schema.rb",
+    "generate": "tsx tools/codegen.ts",
+    "build": "node tools/gen-styles.mjs && tsc",
+    "update-styles": "node tools/fetch-styles.mjs && node tools/gen-styles.mjs",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "relaton",
+    "bibliographic",
+    "standards",
+    "lutaml"
+  ],
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "yaml": "^2.6.0",
+    "zod": "^3.24.0",
+    "fast-xml-parser": "^5.11.1",
+    "@pubid/pubid": "^0.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "schema"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/relaton/relaton-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/relaton/relaton-ts/issues"
+  },
+  "homepage": "https://github.com/relaton/relaton-ts#readme"
 }
