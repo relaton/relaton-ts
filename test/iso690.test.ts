@@ -175,3 +175,34 @@ describe("citation template evaluator", () => {
     })).toBe("In: _A host_ 1971.");
   });
 });
+
+// relaton-ts#33: real records carry array-form title languages; the
+// relaton-ts#33: real records carry array-form title languages; the
+// scalar-only langOf crashed on them. /v3/cite renders the stored record
+// directly (toIso690 takes the raw shape), so the repro renders without
+// parseItem — the generated schema's scalar `language` slot is a separate
+// models-pipeline question.
+describe("array-form title languages (relaton-ts#33)", () => {
+  const record = {
+    docidentifier: [{ content: "ISO 9001:2015", type: "ISO", primary: true }],
+    title: [{ content: "Quality management systems - Requirements", type: "main", language: ["en"] }],
+    date: [{ type: "published", at: "2015-01-01" }],
+  };
+
+  it("renders the issue repro record instead of crashing", () => {
+    expect(toIso690(record as never)).toContain("Quality management systems - Requirements");
+  });
+
+  it("selects the English variant when languages mix scalar and array forms", () => {
+    const mixed = {
+      ...record,
+      title: [
+        { content: "Systèmes de management de la qualité", type: "main", language: "fr" },
+        { content: "Quality management systems", type: "main", language: ["en"] },
+      ],
+    };
+    const out = toIso690(mixed as never);
+    expect(out).toContain("Quality management systems");
+    expect(out).not.toContain("Systèmes");
+  });
+});
