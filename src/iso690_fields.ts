@@ -56,10 +56,15 @@ export function primaryDocid(rec: Rec): string {
  */
 export function fullTitleOf(rec: Rec): string {
   const titles = (rec.title ?? []).filter((t) => contentOf(t));
-  const langOf = (t: { language?: string | undefined }) => (t.language ?? "").toLowerCase();
-  const langs = [...new Set(titles.map(langOf).filter(Boolean))];
+  // language arrives scalar or array (real records carry ["en"]) — both
+  // normalize to a lowercase string list (same contract as citation/fields)
+  const langOf = (t: { language?: string | string[] }): string[] => {
+    const langs = Array.isArray(t.language) ? t.language : [t.language];
+    return langs.filter((l): l is string => typeof l === "string").map((l) => l.toLowerCase());
+  };
+  const langs = [...new Set(titles.flatMap(langOf).filter(Boolean))];
   const lang = langs.includes("en") ? "en" : langs[0] ?? "";
-  const ours = titles.filter((t) => (lang ? langOf(t) === lang : true));
+  const ours = titles.filter((t) => (lang ? langOf(t).includes(lang) : true));
 
   const intro = ours.find((t) => t.type === "title-intro");
   const main = ours.find((t) => t.type === "title-main");
